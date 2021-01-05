@@ -18,6 +18,6 @@ export class CategoriesComponent implements OnInit {
   }
 
   showTaskBy(category: Category): void {
-    this.data.getTasksBy(category);
+    this.data.fillTasksBy(category);
   }
 }
