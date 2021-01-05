@@ -17,4 +17,7 @@ export class CategoriesComponent implements OnInit {
     this.categories = this.data.getCategories();
   }
 
+  showTaskBy(category: Category): void {
+    this.data.getTasksBy(category);
+  }
 }

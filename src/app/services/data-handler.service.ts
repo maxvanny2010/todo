@@ -17,4 +17,8 @@ export class DataHandlerService {
   getTasks(): Task[] {
     return TestData.tasks;
   }
+
+  getTasksBy(category: Category): Task[] {
+    return TestData.tasks.filter(t => t.category === category);
+  }
 }
