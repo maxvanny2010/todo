@@ -16,7 +16,6 @@ export class TestData {
     {id: 11, title: 'Ремонт'},
   ];
 
-
   static priorities: Priority[] = [
     {id: 1, title: 'Низкий', color: '#e5e5e5'},
     {id: 2, title: 'Средний', color: '#85D1B2'},
@@ -24,8 +23,6 @@ export class TestData {
     {id: 4, title: 'Очень срочно!', color: '#F1128D'}
   ];
 
-
-  // не забывать - индексация приоритетов и категорий начинается с нуля
   static tasks: Task[] = [
     {
       id: 1,
