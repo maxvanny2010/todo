@@ -22,7 +22,7 @@ export class TasksComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.data.taskSubject.subscribe(tasks => this.tasks = tasks);
+    this.data.getAllTasks().subscribe(tasks => this.tasks = tasks);
     /*update data source if data of tasks updated*/
     this.refreshTable();
   }

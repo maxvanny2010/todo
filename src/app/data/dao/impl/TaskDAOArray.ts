@@ -1,21 +1,22 @@
 import {TaskDAO} from '../interface/TaskDAO';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Category, Priority, Task} from 'src/app/model/interfaces';
+import {TestData} from '../../TestData';
 
 export class TaskDAOArray implements TaskDAO {
-  add(task: Task): Observable<Category> | undefined {
+  getAll(): Observable<Task[]> {
+    return of(TestData.tasks);
+  }
+
+  get(id: number): Observable<Task | undefined> {
+    return of(TestData.tasks.find(t => t.id === id));
+  }
+
+  add(task: Task): Observable<Task> {
     return undefined;
   }
 
-  delete(id: number): Observable<Category> | undefined {
-    return undefined;
-  }
-
-  get(id: number): Observable<Category> | undefined {
-    return undefined;
-  }
-
-  getAll(): Observable<Category[]> | undefined {
+  delete(id: number): Observable<Task> {
     return undefined;
   }
 
