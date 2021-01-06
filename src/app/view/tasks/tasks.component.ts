@@ -17,4 +17,7 @@ export class TasksComponent implements OnInit {
     this.data.taskSubject.subscribe(tasks => this.tasks = tasks);
   }
 
+  completedTask(task: Task): void {
+    task.completed = !task.completed;
+  }
 }

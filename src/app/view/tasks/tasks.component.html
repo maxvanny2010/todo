@@ -12,13 +12,23 @@
       <th>Дата</th>
       </thead>
       <tbody>
-      <tr *ngFor="let task of tasks;let idx = index">
+      <tr *ngFor="let task of tasks;let idx = index" [class.completed]="task.completed">
         <td>{{idx + 1}}</td>
         <td>{{task.title}}</td>
         <td>{{task.category != null ? task.category.title : ""}}</td>
         <td>{{task.priority != null ? task.priority.title : ""}}</td>
         <td>{{task.date ? (task.date | date:"short") : ""}}</td>
-        <td>{{task.completed}}</td>
+        <td>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="checkbox" value="" [checked]="task.completed"
+                     (click)="completedTask(task)"
+              >
+              <span class="form-check-sign">
+                <span class="check"></span></span>
+            </label>
+          </div>
+        </td>
       </tr>
       </tbody>
     </table>
