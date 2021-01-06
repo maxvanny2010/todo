@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core';
-import {Category, Task} from '../model/interfaces';
-import {Observable, pipe} from 'rxjs';
+import {Category, Priority, Task} from '../model/interfaces';
+import {Observable} from 'rxjs';
 import {TaskDAOArray} from '../data/dao/impl/TaskDAOArray';
 import {CategoryDAOArray} from '../data/dao/impl/CategoryDAOArray';
-import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -23,4 +22,7 @@ export class DataHandlerService {
     return this.categoryDaoArray.getAll();
   }
 
+  searchTasks(category: Category, searchText: string, status: boolean, priority: Priority): Observable<Task[]> {
+    return this.taskDaoArray.search(category, searchText, status, priority);
+  }
 }

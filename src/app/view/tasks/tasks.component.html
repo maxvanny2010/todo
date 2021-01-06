@@ -2,7 +2,7 @@
   <div class="card-header card-header-warning">
     <h4 class="card-title">Список задач</h4>
   </div>
-  <div class="card-body table-responsive" *ngIf="tasks.length > 0; else notFound">
+  <div class="card-body table-responsive" *ngIf="tasks && tasks.length > 0; else notFound">
     <table mat-table [dataSource]="dataSource" matSort>
       <!--color-->
       <ng-container matColumnDef="color">
@@ -21,7 +21,7 @@
       <!--title task-->
       <ng-container matColumnDef="title">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Название</th>
-        <td class="col-title" *matCellDef="let task"
+        <td class="col-title pointer" *matCellDef="let task"
             [class.completed]="task['completed']"
             mat-cell
         >
@@ -70,4 +70,6 @@
     <mat-paginator [pageSizeOptions]="[10,20,50,100]" showFirstLastButtons></mat-paginator>
   </div>
 </div>
-<ng-template #notFound><div class="not-found"><p>Ничего не найдено</p></div></ng-template>
+<ng-template #notFound>
+  <div class="not-found"><p>Ничего не найдено</p></div>
+</ng-template>

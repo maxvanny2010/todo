@@ -1,5 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {DataHandlerService} from '../../services/data-handler.service';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Task} from '../../model/interfaces';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
@@ -10,30 +9,27 @@ import {MatSort} from '@angular/material/sort';
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.css']
 })
-export class TasksComponent implements OnInit, AfterViewInit {
-  tasks: Task[] = [];
+export class TasksComponent implements OnInit {
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category'];
   /*container for table data from tasks[] ps. it can be db or any data source*/
   dataSource: MatTableDataSource<Task> = new MatTableDataSource<Task>();
   @ViewChild(MatPaginator, {static: false}) private paginator!: MatPaginator;
   @ViewChild(MatSort, {static: false}) private sort!: MatSort;
+  // to set values only in html in base page in <app-tasks [tasks]="tasks">
+  tasks: Task[] = [];
 
-  constructor(private data: DataHandlerService) {
+  @Input('tasks')
+  set setTasks(tasks: Task[]) {
+    this.tasks = tasks;
+    this.fillTable();
+  }
+
+  constructor() {
   }
 
   ngOnInit(): void {
-    this.data.getAllTasks().subscribe(tasks => this.tasks = tasks);
-    /*update data source if data of tasks updated*/
-    this.refreshTable();
-  }
-
-  ngAfterViewInit(): void {
-    /*init after pain page*/
-    this.addTableObjects();
-  }
-
-  completedTask(task: Task): void {
-    task.completed = !task.completed;
+    /*to fill a table with data*/
+    this.fillTable();
   }
 
   getPriorityColor(task: Task): string {
@@ -46,7 +42,10 @@ export class TasksComponent implements OnInit, AfterViewInit {
     return color;
   }
 
-  private refreshTable(): void {
+  private fillTable(): void {
+    if (!this.dataSource) {
+      return;
+    }
     this.dataSource.data = this.tasks;
     this.addTableObjects();
     // @ts-ignore
@@ -76,4 +75,5 @@ export class TasksComponent implements OnInit, AfterViewInit {
     /*update component paginator(count pages or notes)*/
     this.dataSource.paginator = this.paginator;
   }
+
 }
