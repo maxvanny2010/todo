@@ -9,11 +9,11 @@
   </a></div>
   <div class="sidebar-wrapper">
     <ul class="nav">
-      <li class="nav-item"
+      <li class="nav-item pointer"
           *ngFor="let category of categories;"
           [class.active]="selectedCategory === category"
           (click)="showTaskBy(category)">
-        <a class="nav-link pointer">
+        <a class="nav-link">
           <p>{{category.title}}</p>
         </a>
       </li>

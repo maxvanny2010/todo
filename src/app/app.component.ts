@@ -11,7 +11,7 @@ export class AppComponent implements OnInit {
   title = 'todo';
   tasks: Task[] = [];
   categories: Category[] = [];
-  private selectedCategory: Category | undefined;
+  selectedCategoryInApp: Category | undefined;
 
   constructor(private dataHandler: DataHandlerService) {
   }
@@ -22,16 +22,16 @@ export class AppComponent implements OnInit {
   }
 
   onSelectCategory(category: Category): void {
-    this.selectedCategory = category;
+    this.selectedCategoryInApp = category;
     this.dataHandler.searchTasks(
-      this.selectedCategory, '', false, {} as Priority)
+      this.selectedCategoryInApp, '', false, {} as Priority)
       .subscribe((tasks) => this.tasks = tasks);
   }
 
   onUpdateTask(task: Task): void {
     this.dataHandler.updateTask(task).subscribe(() => {
       this.dataHandler.searchTasks(
-        this.selectedCategory as Category, '', false, {} as Priority
+        this.selectedCategoryInApp as Category, '', false, {} as Priority
       ).subscribe(tasks => this.tasks = tasks);
     });
   }
@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
   onDeleteTask(task: Task): void {
     this.dataHandler.deleteTask(task.id).subscribe(() => {
       this.dataHandler.searchTasks(
-        this.selectedCategory as Category, '', false, {} as Priority
+        this.selectedCategoryInApp as Category, '', false, {} as Priority
       ).subscribe(tasks => this.tasks = tasks);
     });
   }

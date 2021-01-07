@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {Task} from '../../model/interfaces';
+import {Category, Task} from '../../model/interfaces';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
@@ -25,6 +25,7 @@ export class TasksComponent implements OnInit {
 
   @Output() updateTask: EventEmitter<Task> = new EventEmitter<Task>();
   @Output() deleteTask: EventEmitter<Task> = new EventEmitter<Task>();
+  @Output() selectCategory: EventEmitter<Category> = new EventEmitter<Category>();
 
   @Input('tasks')
   set setTasks(tasks: Task[]) {
@@ -127,5 +128,9 @@ export class TasksComponent implements OnInit {
   onToggleStatus(task: Task): void {
     task.completed = !task.completed;
     this.updateTask.emit(task);
+  }
+
+  onSelectCategory(category: Category): void {
+    this.selectCategory.emit(category);
   }
 }

@@ -9,7 +9,7 @@ import {Category} from '../../model/interfaces';
 export class CategoriesComponent {
   @Input() categories: Category[] = [];
   @Output() selectCategory: EventEmitter<Category> = new EventEmitter<Category>();
-  selectedCategory: Category | undefined;
+  @Input() selectedCategory: Category | undefined;
 
   constructor() {
   }
