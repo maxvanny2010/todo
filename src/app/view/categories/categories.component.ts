@@ -10,6 +10,7 @@ export class CategoriesComponent {
   @Input() categories: Category[] = [];
   @Output() selectCategory: EventEmitter<Category> = new EventEmitter<Category>();
   @Input() selectedCategory: Category | undefined;
+  indexMouseMove: number | undefined;
 
   constructor() {
   }
@@ -20,5 +21,13 @@ export class CategoriesComponent {
     }
     this.selectedCategory = category;
     this.selectCategory.emit(this.selectedCategory);
+  }
+
+  showEditIcon(index: number | undefined): void {
+    this.indexMouseMove = index;
+  }
+
+  openEditDialog(category: Category): void {
+
   }
 }
