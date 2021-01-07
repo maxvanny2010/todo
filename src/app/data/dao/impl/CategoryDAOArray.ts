@@ -6,15 +6,15 @@ import {TestData} from '../../TestData';
 export class CategoryDAOArray implements CategoryDAO {
 
   add(category: Category): Observable<Category> {
-    return undefined;
+    return of(category);
   }
 
   delete(id: number): Observable<Category> {
-    return undefined;
+    return of({} as Category);
   }
 
   get(id: number): Observable<Category> {
-    return undefined;
+    return of({} as Category);
   }
 
   getAll(): Observable<Category[]> {
@@ -22,11 +22,11 @@ export class CategoryDAOArray implements CategoryDAO {
   }
 
   search(title: string): Observable<Category[]> {
-    return undefined;
+    return of([]);
   }
 
-  update(T): Observable<Category> {
-    return undefined;
+  update(category: Category): Observable<Category> {
+    return of({} as Category);
   }
 
 }

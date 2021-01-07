@@ -13,35 +13,47 @@ export class TaskDAOArray implements TaskDAO {
   }
 
   add(task: Task): Observable<Task> {
-    return undefined;
+    return of(task);
   }
 
-  delete(id: number): Observable<Task> {
-    return undefined;
+  delete(id: number): Observable<Task | undefined> {
+    const taskTmp = TestData.tasks.find(t => t.id === id);
+    TestData.tasks.splice(TestData.tasks.indexOf(taskTmp as Task), 1);
+    return of(taskTmp);
   }
 
   getCompletedCountInCategory(category: Category): Observable<number> {
-    return undefined;
+    return of(0);
   }
 
   getTotalCount(): Observable<number> {
-    return undefined;
+    return of(0);
   }
 
   getTotalCountInCategory(category: Category): Observable<number> {
-    return undefined;
+    return of(0);
   }
 
   getUncompletedCountInCategory(category: Category): Observable<number> {
-    return undefined;
+    return of(0);
   }
 
   search(category: Category, searchText: string, status: boolean, priority: Priority): Observable<Task[]> {
-    return undefined;
+    return of(this.searchTodos(category, searchText, status, priority));
   }
 
   update(task: Task): Observable<Task> {
-    return undefined;
+    const taskTmp = TestData.tasks.find(t => t.id = task.id);
+    TestData.tasks.splice(TestData.tasks.indexOf(taskTmp as Task), 1, task);
+    return of(task);
   }
 
+  private searchTodos(category: Category, searchText: string, status: boolean, priority: Priority): Task[] {
+    let allTasks = TestData.tasks;
+    if (category != null) {
+      allTasks = allTasks.filter(todo => todo.category === category);
+    }
+    return allTasks;
+
+  }
 }

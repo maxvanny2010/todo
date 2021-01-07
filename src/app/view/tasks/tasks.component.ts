@@ -1,8 +1,11 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Task} from '../../model/interfaces';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
+import {EditTaskDialogComponent} from '../../dialog/edit-task-dialog/edit-task-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
+import {DataHandlerService} from '../../services/data-handler.service';
 
 @Component({
   selector: 'app-tasks',
@@ -10,13 +13,17 @@ import {MatSort} from '@angular/material/sort';
   styleUrls: ['./tasks.component.css']
 })
 export class TasksComponent implements OnInit {
+  // to set values only in html in base page in <app-tasks [tasks]="tasks">
+  tasks: Task[] = [];
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category'];
   /*container for table data from tasks[] ps. it can be db or any data source*/
   dataSource: MatTableDataSource<Task> = new MatTableDataSource<Task>();
+
   @ViewChild(MatPaginator, {static: false}) private paginator!: MatPaginator;
   @ViewChild(MatSort, {static: false}) private sort!: MatSort;
-  // to set values only in html in base page in <app-tasks [tasks]="tasks">
-  tasks: Task[] = [];
+
+  @Output() updateTask: EventEmitter<Task> = new EventEmitter<Task>();
+  @Output() deleteTask: EventEmitter<Task> = new EventEmitter<Task>();
 
   @Input('tasks')
   set setTasks(tasks: Task[]) {
@@ -24,7 +31,10 @@ export class TasksComponent implements OnInit {
     this.fillTable();
   }
 
-  constructor() {
+  constructor(
+    private dataHandler: DataHandlerService,
+    private dialog: MatDialog,
+  ) {
   }
 
   ngOnInit(): void {
@@ -76,4 +86,17 @@ export class TasksComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
+  openEditTaskDialog(task: Task): void {
+    const dialogRef = this.dialog.open(EditTaskDialogComponent,
+      {data: [task, 'Редактирование задачи'], autoFocus: false});
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'delete') {
+        this.deleteTask.emit(task);
+        return;
+      } else if (result as Task) {
+        this.updateTask.emit(task);
+        return;
+      }
+    });
+  }
 }

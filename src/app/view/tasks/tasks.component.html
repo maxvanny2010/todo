@@ -23,6 +23,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Название</th>
         <td class="col-title pointer" *matCellDef="let task"
             [class.completed]="task['completed']"
+            (click)="openEditTaskDialog(task)"
             mat-cell
         >
           {{task.title}}

@@ -1,26 +1,27 @@
-import {Observable} from 'rxjs';
-import {Category, Priority} from '../../../model/interfaces';
+import {Observable, of} from 'rxjs';
+import {Priority} from '../../../model/interfaces';
 import {PriorityDAO} from '../interface/PriorityDAO';
+import {TestData} from '../../TestData';
 
 export class PriorityDAOArray implements PriorityDAO {
-  add(priority: Priority): Observable<Category> | undefined {
-    return undefined;
+  add(priority: Priority): Observable<Priority> {
+    return of(priority);
   }
 
-  delete(id: number): Observable<Category> | undefined {
-    return undefined;
+  delete(id: number): Observable<Priority | undefined> {
+    return of({} as Priority);
   }
 
-  get(id: number): Observable<Category> | undefined {
-    return undefined;
+  get(id: number): Observable<Priority | undefined> {
+    return of({} as Priority);
   }
 
-  getAll(): Observable<Category[]> | undefined {
-    return undefined;
+  getAll(): Observable<Priority[]> {
+    return of(TestData.priorities);
   }
 
   update(priority: Priority): Observable<Priority> {
-    return undefined;
+    return of(priority);
   }
 
 }

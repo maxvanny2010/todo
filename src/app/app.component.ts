@@ -27,4 +27,20 @@ export class AppComponent implements OnInit {
       this.selectedCategory, '', false, {} as Priority)
       .subscribe((tasks) => this.tasks = tasks);
   }
+
+  onUpdateTask(task: Task): void {
+    this.dataHandler.updateTask(task).subscribe(() => {
+      this.dataHandler.searchTasks(
+        this.selectedCategory as Category, '', false, {} as Priority
+      ).subscribe(tasks => this.tasks = tasks);
+    });
+  }
+
+  onDeleteTask(task: Task): void {
+    this.dataHandler.deleteTask(task.id).subscribe(() => {
+      this.dataHandler.searchTasks(
+        this.selectedCategory as Category, '', false, {} as Priority
+      ).subscribe(tasks => this.tasks = tasks);
+    });
+  }
 }
