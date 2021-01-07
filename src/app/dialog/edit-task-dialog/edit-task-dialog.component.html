@@ -34,6 +34,27 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+
+  <mat-form-field>
+    <input matInput
+           #inputDate
+           placeholder="Укажите срок выполнения"
+           readonly
+           [matDatepicker]="picker"
+           [(ngModel)]="tmpDate"
+           (click)="picker.open()"
+    >
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+
+    <button mat-button matSuffix mat-icon-button aria-label="Clear"
+            *ngIf="inputDate.value.trim().length > 0"
+            (click)="tmpDate=undefined" class="size25"
+    >
+      <mat-icon>clear</mat-icon>
+    </button>
+  </mat-form-field>
+
 </mat-dialog-content>
 
 <mat-dialog-actions>

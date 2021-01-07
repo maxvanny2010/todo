@@ -13,6 +13,7 @@ export class EditTaskDialogComponent implements OnInit {
   dialogTitle = '';
   task!: Task;
   tmpTitle = '';
+  tmpDate!: Date | undefined;
   tmpCategory: Category | undefined;
   tmpPriority: Priority | undefined;
   categories: Category[] = [];
@@ -22,6 +23,7 @@ export class EditTaskDialogComponent implements OnInit {
   /*service*/
 
   /*for open new dialog from current dialog for confirm*/
+
   constructor(
     private dialogRef: MatDialogRef<EditTaskDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: [Task, string],
@@ -37,6 +39,7 @@ export class EditTaskDialogComponent implements OnInit {
     this.tmpTitle = this.task.title;
     this.tmpCategory = this.task.category;
     this.tmpPriority = this.task.priority;
+    this.tmpDate = this.task.date;
     this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories);
     this.dataHandler.getAllPriorities().subscribe(priorities => this.priorities = priorities);
   }
@@ -47,6 +50,7 @@ export class EditTaskDialogComponent implements OnInit {
     /*to sent change item to handler modal*/
     this.task.category = this.tmpCategory;
     this.task.priority = this.tmpPriority;
+    this.task.date = this.tmpDate;
     this.dialogRef.close(this.task);
   }
 

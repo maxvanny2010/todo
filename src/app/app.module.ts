@@ -2,22 +2,29 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {CategoriesComponent} from './view/categories/categories.component';
 import {TasksComponent} from './view/tasks/tasks.component';
+import {CategoriesComponent} from './view/categories/categories.component';
+import {EditTaskDialogComponent} from './dialog/edit-task-dialog/edit-task-dialog.component';
+import {ConfirmDialogComponent} from './dialog/confirm-dialog/confirm-dialog.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
 import {MatDialogModule} from '@angular/material/dialog';
-import {EditTaskDialogComponent} from './dialog/edit-task-dialog/edit-task-dialog.component';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {FormsModule} from '@angular/forms';
-import {MatOptionModule} from '@angular/material/core';
+import {MatNativeDateModule, MatOptionModule} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
-import {ConfirmDialogComponent} from './dialog/confirm-dialog/confirm-dialog.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {TaskDatePipe} from './pipe/task-date.pipe';
+
+import {registerLocaleData} from '@angular/common';
+import localRu from '@angular/common/locales/ru';
+
+registerLocaleData(localRu);
 
 @NgModule({
   declarations: [
@@ -26,6 +33,7 @@ import {ConfirmDialogComponent} from './dialog/confirm-dialog/confirm-dialog.com
     TasksComponent,
     EditTaskDialogComponent,
     ConfirmDialogComponent,
+    TaskDatePipe,
   ],
   imports: [
     BrowserModule,
@@ -40,7 +48,9 @@ import {ConfirmDialogComponent} from './dialog/confirm-dialog/confirm-dialog.com
     MatButtonModule,
     MatIconModule,
     MatOptionModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   providers: [],
   bootstrap: [AppComponent]
