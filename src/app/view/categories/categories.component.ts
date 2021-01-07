@@ -1,5 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Category} from '../../model/interfaces';
+import {EditCategoryDialogComponent} from '../../dialog/edit-category-dialog/edit-category-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-categories',
@@ -11,8 +13,10 @@ export class CategoriesComponent {
   @Output() selectCategory: EventEmitter<Category> = new EventEmitter<Category>();
   @Input() selectedCategory: Category | undefined;
   indexMouseMove: number | undefined;
+  @Output() deleteCategory: EventEmitter<Category> = new EventEmitter<Category>();
+  @Output() updateCategory: EventEmitter<Category> = new EventEmitter<Category>();
 
-  constructor() {
+  constructor(private dialog: MatDialog) {
   }
 
   showTaskBy(category: Category | undefined): void {
@@ -28,6 +32,17 @@ export class CategoriesComponent {
   }
 
   openEditDialog(category: Category): void {
-
+    const dialogRef = this.dialog.open(EditCategoryDialogComponent, {
+      maxWidth: '400px',
+      data: [category, 'Редактирование категории']
+    });
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (result === 'delete') {
+          this.deleteCategory.emit(category);
+        } else if (result as Category) {
+          this.updateCategory.emit(result);
+        }
+      });
   }
 }

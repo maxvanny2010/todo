@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
     this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories);
   }
 
-  onSelectCategory(category: Category): void {
+  onSelectCategory(category: Category | undefined): void {
     this.selectedCategoryInApp = category;
     this.dataHandler.searchTasks(
       this.selectedCategoryInApp, '', false, {} as Priority)
@@ -31,16 +31,31 @@ export class AppComponent implements OnInit {
   onUpdateTask(task: Task): void {
     this.dataHandler.updateTask(task).subscribe(() => {
       this.dataHandler.searchTasks(
-        this.selectedCategoryInApp as Category, '', false, {} as Priority
-      ).subscribe(tasks => this.tasks = tasks);
+        this.selectedCategoryInApp as Category, '',
+        false, {} as Priority).subscribe(tasks => this.tasks = tasks);
     });
   }
 
   onDeleteTask(task: Task): void {
     this.dataHandler.deleteTask(task.id).subscribe(() => {
       this.dataHandler.searchTasks(
-        this.selectedCategoryInApp as Category, '', false, {} as Priority
-      ).subscribe(tasks => this.tasks = tasks);
+        this.selectedCategoryInApp as Category, '',
+        false, {} as Priority).subscribe(tasks => this.tasks = tasks);
     });
+  }
+
+  onUpdateCategory(category: Category): void {
+    this.dataHandler.updateCategory(category)
+      .subscribe(() => {
+        this.onSelectCategory(this.selectedCategoryInApp);
+      });
+  }
+
+  onDeleteCategory(category: Category): void {
+    this.dataHandler.deleteCategory(category)
+      .subscribe(() => {
+        this.selectedCategoryInApp = undefined;
+        this.onSelectCategory(this.selectedCategoryInApp);
+      });
   }
 }

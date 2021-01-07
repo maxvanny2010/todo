@@ -2,6 +2,8 @@
   <app-categories
     [categories]="categories"
     (selectCategory)="onSelectCategory($event)"
+    (updateCategory)="onUpdateCategory($event)"
+    (deleteCategory)="onDeleteCategory($event)"
     [selectedCategory]="selectedCategoryInApp"
   ></app-categories>
   <div class="main-panel">

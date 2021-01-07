@@ -1,0 +1,48 @@
+<mat-dialog-content>
+  <p mat-dialog-title>{{dialogTitle}}</p>
+  <mat-form-field>
+    <mat-label>Название (15 символов)</mat-label>
+    <input matInput
+           #inputTitle
+           [(ngModel)]="categoryTitle"
+           (keydown.enter)="onConfirm()"
+           maxlength="15"
+    />
+
+    <button mat-button mat-icon-button matSuffix
+            aria-label="Clear"
+            class="clear-icon size25"
+            *ngIf="categoryTitle.trim().length > 0"
+            (click)="categoryTitle= ''"
+    >
+      <mat-icon>clear</mat-icon>
+    </button>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <div class="col-12 text-center">
+    <button mat-raised-button color="primary"
+            [disabled]="inputTitle.value.trim().length==0"
+            (click)="onConfirm()"
+    >
+      Сохранить
+    </button>
+    <button mat-raised-button
+            (click)="onCancel()"
+    >
+      Отмена
+    </button>
+  </div>
+  <div class="col-12 text-center">
+    <button
+      mat-button
+      (click)="onDelete()" class="red"
+    >
+      Удалить
+    </button>
+  </div>
+</mat-dialog-actions>
+
+
+
