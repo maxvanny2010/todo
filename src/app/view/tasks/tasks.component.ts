@@ -93,6 +93,14 @@ export class TasksComponent implements OnInit {
       if (result === 'delete') {
         this.deleteTask.emit(task);
         return;
+      } else if (result === 'active') {
+        task.completed = false;
+        this.updateTask.emit(task);
+        return;
+      } else if (result === 'complete') {
+        task.completed = true;
+        this.updateTask.emit(task);
+        return;
       } else if (result as Task) {
         this.updateTask.emit(task);
         return;
