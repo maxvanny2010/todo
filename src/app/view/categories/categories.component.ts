@@ -14,7 +14,7 @@ export class CategoriesComponent {
   constructor() {
   }
 
-  showTaskBy(category: Category): void {
+  showTaskBy(category: Category | undefined): void {
     if (this.selectedCategory === category) {
       return;
     }
