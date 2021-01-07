@@ -6,6 +6,7 @@ import {MatSort} from '@angular/material/sort';
 import {EditTaskDialogComponent} from '../../dialog/edit-task-dialog/edit-task-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {DataHandlerService} from '../../services/data-handler.service';
+import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-tasks',
@@ -15,7 +16,7 @@ import {DataHandlerService} from '../../services/data-handler.service';
 export class TasksComponent implements OnInit {
   // to set values only in html in base page in <app-tasks [tasks]="tasks">
   tasks: Task[] = [];
-  displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category'];
+  displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category', 'operations', 'select'];
   /*container for table data from tasks[] ps. it can be db or any data source*/
   dataSource: MatTableDataSource<Task> = new MatTableDataSource<Task>();
 
@@ -106,5 +107,25 @@ export class TasksComponent implements OnInit {
         return;
       }
     });
+  }
+
+  openDeleteDialog(task: Task): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: '500px',
+      data: {
+        dialogTitle: 'Подтвердите действие',
+        message: `Вы действительно хотите удалить задачу: ${task.title}?`
+      }, autoFocus: false
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deleteTask.emit(task);
+      }
+    });
+  }
+
+  onToggleStatus(task: Task): void {
+    task.completed = !task.completed;
+    this.updateTask.emit(task);
   }
 }
