@@ -6,6 +6,7 @@ import {MatSort} from '@angular/material/sort';
 import {EditTaskDialogComponent} from '../../dialog/edit-task-dialog/edit-task-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {DataHandlerService} from '../../services/data-handler.service';
+
 import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -26,7 +27,11 @@ export class TasksComponent implements OnInit {
   @Output() updateTask: EventEmitter<Task> = new EventEmitter<Task>();
   @Output() deleteTask: EventEmitter<Task> = new EventEmitter<Task>();
   @Output() selectCategory: EventEmitter<Category> = new EventEmitter<Category>();
-
+  @Output() filterByTitle: EventEmitter<string> = new EventEmitter<string>();
+  @Output() filterByStatus: EventEmitter<any> = new EventEmitter<any>();
+  // поиск
+  searchTaskText = ''; // текущее значение для поиска задач
+  selectedStatusFilter: any = null;   // по-умолчанию будут показываться задачи по всем статусам (решенные и нерешенные)
   @Input('tasks')
   set setTasks(tasks: Task[]) {
     this.tasks = tasks;
@@ -132,5 +137,16 @@ export class TasksComponent implements OnInit {
 
   onSelectCategory(category: Category): void {
     this.selectCategory.emit(category);
+  }
+
+  onFilterByTitle(): void {
+    this.filterByTitle.emit(this.searchTaskText);
+  }
+
+  onFilterByStatus(value: any): void {
+    if (value !== this.selectedStatusFilter) {
+      this.selectedStatusFilter = value;
+      this.filterByStatus.emit(this.selectedStatusFilter);
+    }
   }
 }

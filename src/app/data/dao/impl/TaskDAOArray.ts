@@ -39,7 +39,7 @@ export class TaskDAOArray implements TaskDAO {
   }
 
   search(category: Category | undefined, searchText: string, status: boolean, priority: Priority): Observable<Task[]> {
-    return of(this.searchTodos(category, searchText, status, priority));
+    return of(this.searchTasks(category, searchText, status, priority));
   }
 
   update(task: Task): Observable<Task> {
@@ -48,12 +48,24 @@ export class TaskDAOArray implements TaskDAO {
     return of(task);
   }
 
-  private searchTodos(category: Category | undefined, searchText: string, status: boolean, priority: Priority): Task[] {
+  private searchTasks(category: Category | undefined, searchText: string, status: boolean, priority: Priority): Task[] {
     let allTasks = TestData.tasks;
-    if (category != null || category !== undefined) {
-      allTasks = allTasks.filter(todo => todo.category === category);
-    }
-    return allTasks;
+    if (status != null) {
+      allTasks = allTasks.filter(task => task.completed === status);
 
+    }
+    if (category != null || category !== undefined) {
+      allTasks = allTasks.filter(task => task.category === category);
+    }
+
+    if (priority.id != null || priority.id !== undefined) {
+      allTasks = allTasks.filter(task => task.priority === priority);
+    }
+
+    if (searchText != null || searchText !== '') {
+      allTasks = allTasks.filter(task => task.title.toUpperCase().includes(searchText.toUpperCase()));
+    }
+
+    return allTasks;
   }
 }

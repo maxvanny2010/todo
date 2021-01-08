@@ -12,6 +12,8 @@ export class AppComponent implements OnInit {
   tasks: Task[] = [];
   categories: Category[] = [];
   selectedCategoryInApp: Category | undefined;
+  private searchTaskText = '';
+  private statusFilter!: boolean;
 
   constructor(private dataHandler: DataHandlerService) {
   }
@@ -23,9 +25,7 @@ export class AppComponent implements OnInit {
 
   onSelectCategory(category: Category | undefined): void {
     this.selectedCategoryInApp = category;
-    this.dataHandler.searchTasks(
-      this.selectedCategoryInApp, '', false, {} as Priority)
-      .subscribe((tasks) => this.tasks = tasks);
+    this.updateTasks();
   }
 
   onUpdateTask(task: Task): void {
@@ -57,5 +57,24 @@ export class AppComponent implements OnInit {
         this.selectedCategoryInApp = undefined;
         this.onSelectCategory(this.selectedCategoryInApp);
       });
+  }
+
+  onSearchTasks(searchString: string): void {
+    this.searchTaskText = searchString;
+    this.updateTasks();
+  }
+
+  onFilterTasksByStatus(status: boolean): void {
+    this.statusFilter = status;
+    this.updateTasks();
+  }
+
+  private updateTasks(): void {
+    this.dataHandler.searchTasks(
+      this.selectedCategoryInApp as Category,
+      this.searchTaskText,
+      this.statusFilter,
+      {} as Priority
+    ).subscribe(tasks => this.tasks = tasks);
   }
 }
