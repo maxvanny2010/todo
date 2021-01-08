@@ -60,7 +60,6 @@ export class TasksComponent implements OnInit {
     this.dataSource = new MatTableDataSource<Task>();
     this.onSelectCategory(undefined);
     /*to fill a table with data*/
-    this.fillTable();
   }
 
   getPriorityColor(task: Task): string {

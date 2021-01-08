@@ -36,7 +36,7 @@ export class CategoriesComponent {
   openEditDialog(category: Category): void {
     const dialogRef = this.dialog.open(EditCategoryDialogComponent, {
       maxWidth: '400px',
-      data: [category, 'Редактирование категории', OperType.EDIT]
+      data: [category.title, 'Редактирование категории', OperType.EDIT]
     });
     dialogRef.afterClosed()
       .subscribe(result => {
