@@ -57,6 +57,8 @@ export class TasksComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.dataSource = new MatTableDataSource<Task>();
+    this.onSelectCategory(undefined);
     /*to fill a table with data*/
     this.fillTable();
   }
@@ -110,7 +112,7 @@ export class TasksComponent implements OnInit {
     this.updateTask.emit(task);
   }
 
-  onSelectCategory(category: Category): void {
+  onSelectCategory(category: Category | undefined): void {
     this.selectCategory.emit(category);
   }
 
