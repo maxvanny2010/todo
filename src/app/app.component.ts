@@ -33,17 +33,13 @@ export class AppComponent implements OnInit {
 
   onUpdateTask(task: Task): void {
     this.dataHandler.updateTask(task).subscribe(() => {
-      this.dataHandler.searchTasks(
-        this.selectedCategoryInApp as Category, '',
-        false, {} as Priority).subscribe(tasks => this.tasks = tasks);
+      this.updateTasks();
     });
   }
 
   onDeleteTask(task: Task): void {
     this.dataHandler.deleteTask(task.id).subscribe(() => {
-      this.dataHandler.searchTasks(
-        this.selectedCategoryInApp as Category, '',
-        false, {} as Priority).subscribe(tasks => this.tasks = tasks);
+      this.updateTasks();
     });
   }
 
@@ -78,12 +74,29 @@ export class AppComponent implements OnInit {
 
   }
 
+  onAddTask(task: Task): void {
+    this.dataHandler.addTask(task).subscribe(() => this.updateTasks());
+  }
+
+  onAddCategory(title: string): void {
+    this.dataHandler.addCategory(title).subscribe(() => {
+      this.updateCategories();
+    });
+  }
+
   private updateTasks(): void {
     this.dataHandler.searchTasks(
       this.selectedCategoryInApp as Category,
       this.searchTaskText,
       this.statusFilter,
       this.priorityFilter
-    ).subscribe(tasks => this.tasks = tasks);
+    ).subscribe(tasks => {
+      this.tasks = tasks;
+    });
+  }
+
+  private updateCategories(): void {
+    this.dataHandler.getAllCategories()
+      .subscribe((categories) => this.categories = categories);
   }
 }

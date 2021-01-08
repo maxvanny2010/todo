@@ -3,6 +3,7 @@ import {Category, Priority, Task} from 'src/app/model/interfaces';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {DataHandlerService} from '../../services/data-handler.service';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
+import {OperType} from '../OperType';
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -16,6 +17,7 @@ export class EditTaskDialogComponent implements OnInit {
   tmpDate!: Date | undefined;
   tmpCategory: Category | undefined;
   tmpPriority: Priority | undefined;
+  operType!: OperType;
   categories: Category[] = [];
   priorities: Priority[] = [];
   /* link to current modal window*/
@@ -26,7 +28,7 @@ export class EditTaskDialogComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<EditTaskDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: [Task, string],
+    @Inject(MAT_DIALOG_DATA) private data: [Task, string, OperType],
     private dataHandler: DataHandlerService,
     private dialog: MatDialog
   ) {
@@ -35,6 +37,7 @@ export class EditTaskDialogComponent implements OnInit {
   ngOnInit(): void {
     this.task = this.data[0];
     this.dialogTitle = this.data[1];
+    this.operType = this.data[2];
     /*to use tmp cause it will be chance to make rollback*/
     this.tmpTitle = this.task.title;
     this.tmpCategory = this.task.category;
@@ -51,6 +54,7 @@ export class EditTaskDialogComponent implements OnInit {
     this.task.category = this.tmpCategory;
     this.task.priority = this.tmpPriority;
     this.task.date = this.tmpDate;
+    // console.log(this.task);
     this.dialogRef.close(this.task);
   }
 
@@ -80,5 +84,13 @@ export class EditTaskDialogComponent implements OnInit {
 
   activate(): void {
     this.dialogRef.close('activate');
+  }
+
+  canDelete(): boolean {
+    return this.operType === OperType.EDIT;
+  }
+
+  canActivateDeactivate(): boolean {
+    return this.operType === OperType.EDIT;
   }
 }

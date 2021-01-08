@@ -8,6 +8,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {DataHandlerService} from '../../services/data-handler.service';
 
 import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog.component';
+import {OperType} from '../../dialog/OperType';
 
 @Component({
   selector: 'app-tasks',
@@ -27,6 +28,7 @@ export class TasksComponent implements OnInit {
 
   @Output() updateTask: EventEmitter<Task> = new EventEmitter<Task>();
   @Output() deleteTask: EventEmitter<Task> = new EventEmitter<Task>();
+  @Output() addTask: EventEmitter<Task> = new EventEmitter<Task>();
   @Output() selectCategory: EventEmitter<Category> = new EventEmitter<Category>();
   @Output() filterByTitle: EventEmitter<string> = new EventEmitter<string>();
   @Output() filterByStatus: EventEmitter<any> = new EventEmitter<any>();
@@ -35,6 +37,7 @@ export class TasksComponent implements OnInit {
   searchTaskText = ''; // текущее значение для поиска задач
   selectedStatusFilter: any = null;   // по-умолчанию будут показываться задачи по всем статусам (решенные и нерешенные)
   selectPriorityFilter: any = null;
+  @Input() selectedCategory: Category | undefined;
 
   @Input('tasks')
   set setTasks(tasks: Task[]) {
@@ -102,9 +105,36 @@ export class TasksComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
+  onToggleStatus(task: Task): void {
+    task.completed = !task.completed;
+    this.updateTask.emit(task);
+  }
+
+  onSelectCategory(category: Category): void {
+    this.selectCategory.emit(category);
+  }
+
+  onFilterByTitle(): void {
+    this.filterByTitle.emit(this.searchTaskText);
+  }
+
+  onFilterByStatus(value: any): void {
+    if (value !== this.selectedStatusFilter) {
+      this.selectedStatusFilter = value;
+      this.filterByStatus.emit(this.selectedStatusFilter);
+    }
+  }
+
+  onFilterByPriority(value: any): void {
+    if (value !== this.selectPriorityFilter) {
+      this.selectPriorityFilter = value;
+      this.filterByPriority.emit(this.selectPriorityFilter);
+    }
+  }
+
   openEditTaskDialog(task: Task): void {
     const dialogRef = this.dialog.open(EditTaskDialogComponent,
-      {data: [task, 'Редактирование задачи'], autoFocus: false});
+      {data: [task, 'Редактирование задачи', OperType.EDIT], autoFocus: false});
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'delete') {
         this.deleteTask.emit(task);
@@ -139,30 +169,21 @@ export class TasksComponent implements OnInit {
     });
   }
 
-  onToggleStatus(task: Task): void {
-    task.completed = !task.completed;
-    this.updateTask.emit(task);
-  }
-
-  onSelectCategory(category: Category): void {
-    this.selectCategory.emit(category);
-  }
-
-  onFilterByTitle(): void {
-    this.filterByTitle.emit(this.searchTaskText);
-  }
-
-  onFilterByStatus(value: any): void {
-    if (value !== this.selectedStatusFilter) {
-      this.selectedStatusFilter = value;
-      this.filterByStatus.emit(this.selectedStatusFilter);
-    }
-  }
-
-  onFilterByPriority(value: any): void {
-    if (value !== this.selectPriorityFilter) {
-      this.selectPriorityFilter = value;
-      this.filterByPriority.emit(this.selectPriorityFilter);
-    }
+  openAddTaskDialog(): void {
+    const task: Task = {
+      id: 0,
+      title: '',
+      completed: false,
+      priority: undefined,
+      category: this.selectedCategory
+    };
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {
+      data: [task, 'Добавление задачи', OperType.ADD]
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.addTask.emit(task);
+      }
+    });
   }
 }

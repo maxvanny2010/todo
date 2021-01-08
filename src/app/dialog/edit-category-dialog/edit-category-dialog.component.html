@@ -10,9 +10,9 @@
     />
 
     <button mat-button mat-icon-button matSuffix
-            aria-label="Clear"
-            class="clear-icon size25"
             *ngIf="categoryTitle.trim().length > 0"
+            class="clear-icon size25"
+            aria-label="Clear"
             (click)="categoryTitle= ''"
     >
       <mat-icon>clear</mat-icon>
@@ -23,7 +23,7 @@
 <mat-dialog-actions>
   <div class="col-12 text-center">
     <button mat-raised-button color="primary"
-            [disabled]="inputTitle.value.trim().length==0"
+            [disabled]="inputTitle.value.trim().length == 0"
             (click)="onConfirm()"
     >
       Сохранить
@@ -35,9 +35,9 @@
     </button>
   </div>
   <div class="col-12 text-center">
-    <button
-      mat-button
-      (click)="onDelete()" class="red"
+    <button mat-button class="red"
+            *ngIf="canDelete()"
+            (click)="onDelete()"
     >
       Удалить
     </button>

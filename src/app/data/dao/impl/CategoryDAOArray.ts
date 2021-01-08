@@ -6,8 +6,14 @@ import {TestData} from '../../TestData';
 export class CategoryDAOArray implements CategoryDAO {
 
   add(category: Category): Observable<Category> {
+    if (category.id === null || category.id === 0) {
+      category.id = this.getLastCategory();
+    }
+    TestData.categories.push(category);
     return of(category);
   }
+
+  private getLastCategory = (): number => Math.max.apply(Math, TestData.categories.map(c => c.id)) + 1;
 
   delete(id: number): Observable<Category> {
     TestData.tasks.forEach(task => {

@@ -13,6 +13,10 @@ export class TaskDAOArray implements TaskDAO {
   }
 
   add(task: Task): Observable<Task> {
+    if (task.id == null || task.id === 0) {
+      task.id = this.getLastIdTask();
+    }
+    TestData.tasks.push(task);
     return of(task);
   }
 
@@ -43,7 +47,7 @@ export class TaskDAOArray implements TaskDAO {
   }
 
   update(task: Task): Observable<Task> {
-    const taskTmp = TestData.tasks.find(t => t.id = task.id);
+    const taskTmp = TestData.tasks.find(t => t.id === task.id);
     TestData.tasks.splice(TestData.tasks.indexOf(taskTmp as Task), 1, task);
     return of(task);
   }
@@ -56,6 +60,7 @@ export class TaskDAOArray implements TaskDAO {
     if (category != null || category !== undefined) {
       allTasks = allTasks.filter(task => task.category === category);
     }
+
     if (priority != null) {
       allTasks = allTasks.filter(task => task.priority === priority);
     }
@@ -64,4 +69,6 @@ export class TaskDAOArray implements TaskDAO {
     }
     return allTasks;
   }
+
+  private getLastIdTask = (): number => Math.max.apply(Math, TestData.tasks.map(task => task.id)) + 1;
 }

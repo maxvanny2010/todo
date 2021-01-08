@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Category} from '../../model/interfaces';
 import {EditCategoryDialogComponent} from '../../dialog/edit-category-dialog/edit-category-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
+import {OperType} from '../../dialog/OperType';
 
 @Component({
   selector: 'app-categories',
@@ -15,6 +16,7 @@ export class CategoriesComponent {
   indexMouseMove: number | undefined;
   @Output() deleteCategory: EventEmitter<Category> = new EventEmitter<Category>();
   @Output() updateCategory: EventEmitter<Category> = new EventEmitter<Category>();
+  @Output() addCategory: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(private dialog: MatDialog) {
   }
@@ -34,7 +36,7 @@ export class CategoriesComponent {
   openEditDialog(category: Category): void {
     const dialogRef = this.dialog.open(EditCategoryDialogComponent, {
       maxWidth: '400px',
-      data: [category, 'Редактирование категории']
+      data: [category, 'Редактирование категории', OperType.EDIT]
     });
     dialogRef.afterClosed()
       .subscribe(result => {
@@ -44,5 +46,16 @@ export class CategoriesComponent {
           this.updateCategory.emit(result);
         }
       });
+  }
+
+  openAddDialog(): void {
+    const dialogRef = this.dialog.open(EditCategoryDialogComponent, {
+      data: ['', 'Добавление категории', OperType.ADD], width: '400px'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.addCategory.emit(result as string);
+      }
+    });
   }
 }
