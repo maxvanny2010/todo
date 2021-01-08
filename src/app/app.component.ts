@@ -11,15 +11,18 @@ export class AppComponent implements OnInit {
   title = 'todo';
   tasks: Task[] = [];
   categories: Category[] = [];
+  priorities: Priority[] = [];
   selectedCategoryInApp: Category | undefined;
   private searchTaskText = '';
   private statusFilter!: boolean;
+  private priorityFilter!: Priority;
 
   constructor(private dataHandler: DataHandlerService) {
   }
 
   ngOnInit(): void {
     this.dataHandler.getAllTasks().subscribe(tasks => this.tasks = tasks);
+    this.dataHandler.getAllPriorities().subscribe(categories => this.priorities = categories);
     this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories);
   }
 
@@ -69,12 +72,18 @@ export class AppComponent implements OnInit {
     this.updateTasks();
   }
 
+  onFilterTasksByPriority(priority: Priority): void {
+    this.priorityFilter = priority;
+    this.updateTasks();
+
+  }
+
   private updateTasks(): void {
     this.dataHandler.searchTasks(
       this.selectedCategoryInApp as Category,
       this.searchTaskText,
       this.statusFilter,
-      {} as Priority
+      this.priorityFilter
     ).subscribe(tasks => this.tasks = tasks);
   }
 }

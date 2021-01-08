@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {Category, Task} from '../../model/interfaces';
+import {Category, Priority, Task} from '../../model/interfaces';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
@@ -17,6 +17,7 @@ import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog
 export class TasksComponent implements OnInit {
   // to set values only in html in base page in <app-tasks [tasks]="tasks">
   tasks: Task[] = [];
+  priorities: Priority[] = [];
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category', 'operations', 'select'];
   /*container for table data from tasks[] ps. it can be db or any data source*/
   dataSource: MatTableDataSource<Task> = new MatTableDataSource<Task>();
@@ -29,13 +30,21 @@ export class TasksComponent implements OnInit {
   @Output() selectCategory: EventEmitter<Category> = new EventEmitter<Category>();
   @Output() filterByTitle: EventEmitter<string> = new EventEmitter<string>();
   @Output() filterByStatus: EventEmitter<any> = new EventEmitter<any>();
+  @Output() filterByPriority: EventEmitter<Priority> = new EventEmitter<Priority>();
   // поиск
   searchTaskText = ''; // текущее значение для поиска задач
   selectedStatusFilter: any = null;   // по-умолчанию будут показываться задачи по всем статусам (решенные и нерешенные)
+  selectPriorityFilter: any = null;
+
   @Input('tasks')
   set setTasks(tasks: Task[]) {
     this.tasks = tasks;
     this.fillTable();
+  }
+
+  @Input('priorities')
+  set setPriorities(priorities: Priority[]) {
+    this.priorities = priorities;
   }
 
   constructor(
@@ -147,6 +156,13 @@ export class TasksComponent implements OnInit {
     if (value !== this.selectedStatusFilter) {
       this.selectedStatusFilter = value;
       this.filterByStatus.emit(this.selectedStatusFilter);
+    }
+  }
+
+  onFilterByPriority(value: any): void {
+    if (value !== this.selectPriorityFilter) {
+      this.selectPriorityFilter = value;
+      this.filterByPriority.emit(this.selectPriorityFilter);
     }
   }
 }
