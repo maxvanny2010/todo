@@ -1,7 +1,9 @@
 <div class="wrapper ">
   <app-categories
+    [categoryMap]="categoryMap"
     [categories]="categories"
     [selectedCategory]="selectedCategoryInApp"
+    [uncompletedTotalTask]="uncompletedTotalTasksCount"
     [searchCategoryTitle]="searchCategoryText"
     (selectCategory)="onSelectCategory($event)"
     (updateCategory)="onUpdateCategory($event)"

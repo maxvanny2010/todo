@@ -3,6 +3,7 @@ import {Category} from '../../model/interfaces';
 import {EditCategoryDialogComponent} from '../../dialog/edit-category-dialog/edit-category-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {OperType} from '../../dialog/OperType';
+import {DataHandlerService} from '../../services/data-handler.service';
 
 @Component({
   selector: 'app-categories',
@@ -19,8 +20,18 @@ export class CategoriesComponent {
   @Output() addCategory: EventEmitter<string> = new EventEmitter<string>();
   @Output() searchCategory: EventEmitter<string> = new EventEmitter<string>();
   @Input() searchCategoryTitle = '';
+  @Input() uncompletedTotalTask = 0;
+  selectedCategoryMap: Map<Category, number> = new Map<Category, number>();
 
-  constructor(private dialog: MatDialog) {
+  @Input('categoryMap')
+  set setCategoryMap(categoryMap: Map<Category, number>) {
+    this.selectedCategoryMap = categoryMap;
+  }
+
+
+  constructor(
+    private dataHandler: DataHandlerService,
+    private dialog: MatDialog) {
   }
 
   showTaskBy(category: Category | undefined): void {
@@ -66,7 +77,6 @@ export class CategoriesComponent {
     if (this.searchCategoryTitle == null) {
       return;
     }
-    console.log(this.searchCategoryTitle);
     this.searchCategory.emit(this.searchCategoryTitle);
   }
 }
