@@ -54,7 +54,6 @@ export class AppComponent implements OnInit {
   }
 
   onDeleteCategory(category: Category): void {
-    console.log(category);
     this.dataHandler.deleteCategory(category)
       .subscribe(() => {
         this.selectedCategoryInApp = undefined;
@@ -108,7 +107,6 @@ export class AppComponent implements OnInit {
 
   onSearchCategory(title: string): void {
     this.searchCategoryText = title;
-    console.log(this.searchCategoryText);
     this.dataHandler.searchCategories(this.searchCategoryText)
       .subscribe(categories => this.categories = categories);
 

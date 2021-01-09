@@ -48,6 +48,7 @@
         </a>
       </li>
       <div class="line"></div>
+      <div *ngIf="categories.length === 0"><p class="not-found">Ничего не найдено</p></div>
       <li class="nav-item pointer"
           *ngFor="let category of categories;let idx = index"
           [class.active]="selectedCategory === category"

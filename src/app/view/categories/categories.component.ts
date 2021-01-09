@@ -46,7 +46,6 @@ export class CategoriesComponent {
           this.deleteCategory.emit(category);
         } else if (result as string) {
           category.title = result as string;
-          console.log(category);
           this.updateCategory.emit(category);
         }
       });
