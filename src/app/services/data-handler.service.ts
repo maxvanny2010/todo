@@ -24,16 +24,16 @@ export class DataHandlerService {
     return this.categoryDaoArray.getAll();
   }
 
-  searchTasks(category: Category | undefined, searchText: string, status: boolean, priority: Priority): Observable<Task[]> {
-    return this.taskDaoArray.search(category, searchText, status, priority);
+  getAllPriorities(): Observable<Priority[]> {
+    return this.priorityDaoArray.getAll();
   }
 
   updateTask(task: Task): Observable<Task> {
     return this.taskDaoArray.update(task);
   }
 
-  getAllPriorities(): Observable<Priority[]> {
-    return this.priorityDaoArray.getAll();
+  searchTasks(category: Category | undefined, searchText: string, status: boolean, priority: Priority): Observable<Task[]> {
+    return this.taskDaoArray.search(category, searchText, status, priority);
   }
 
   deleteTask(id: number): Observable<Task | undefined> {
@@ -58,5 +58,21 @@ export class DataHandlerService {
 
   searchCategories(title: string): Observable<Category[]> {
     return this.categoryDaoArray.search(title);
+  }
+
+  getCompletedCountInCategory(category: Category | undefined): Observable<number> {
+    return this.taskDaoArray.getCompletedCountInCategory(category);
+  }
+
+  getUnCompletedTotalCount(): Observable<number> {
+    return this.taskDaoArray.getUncompletedCountInCategory(undefined);
+  }
+
+  getUnCompletedCountInCategory(category: Category | undefined): Observable<number> {
+    return this.taskDaoArray.getUncompletedCountInCategory(category);
+  }
+
+  getTotalCountInCategory(category: Category | undefined): Observable<number> {
+    return this.taskDaoArray.getTotalCountInCategory(category);
   }
 }

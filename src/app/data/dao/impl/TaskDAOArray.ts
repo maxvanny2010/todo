@@ -26,20 +26,24 @@ export class TaskDAOArray implements TaskDAO {
     return of(taskTmp);
   }
 
-  getCompletedCountInCategory(category: Category): Observable<number> {
-    return of(0);
-  }
-
   getTotalCount(): Observable<number> {
-    return of(0);
+    const args = TestData.tasks.length;
+    return of(args);
   }
 
-  getTotalCountInCategory(category: Category): Observable<number> {
-    return of(0);
+  getTotalCountInCategory(category: Category | undefined): Observable<number> {
+    const args = this.searchTasks(category, '', undefined, undefined).length;
+    return of(args);
   }
 
-  getUncompletedCountInCategory(category: Category): Observable<number> {
-    return of(0);
+  getCompletedCountInCategory(category: Category | undefined): Observable<number> {
+    const args = this.searchTasks(category, '', true, undefined).length;
+    return of(args);
+  }
+
+  getUncompletedCountInCategory(category: Category | undefined): Observable<number> {
+    const args = this.searchTasks(category, '', false, undefined).length;
+    return of(args);
   }
 
   search(category: Category | undefined, searchText: string, status: boolean, priority: Priority): Observable<Task[]> {
@@ -52,16 +56,19 @@ export class TaskDAOArray implements TaskDAO {
     return of(task);
   }
 
-  private searchTasks(category: Category | undefined, searchText: string, status: boolean, priority: Priority): Task[] {
+  private searchTasks(category: Category | undefined, searchText: string,
+                      status: boolean | undefined, priority: Priority | undefined): Task[] {
     let allTasks = TestData.tasks;
-    if (status != null) {
+
+    if (status != null || status !== undefined) {
       allTasks = allTasks.filter(task => task.completed === status);
     }
+
     if (category != null || category !== undefined) {
       allTasks = allTasks.filter(task => task.category === category);
     }
 
-    if (priority != null) {
+    if (priority != null || priority !== undefined) {
       allTasks = allTasks.filter(task => task.priority === priority);
     }
     if (searchText != null || searchText !== '') {

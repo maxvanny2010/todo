@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Category, Priority, Task} from './model/interfaces';
 import {DataHandlerService} from './services/data-handler.service';
+import {zip} from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,10 @@ export class AppComponent implements OnInit {
   private statusFilter!: boolean;
   private priorityFilter!: Priority;
   searchCategoryText = '';
+  totalTasksCountInCategory: any | undefined;
+  completedCountInCategory: any | undefined;
+  uncompletedCountInCategory: any | undefined;
+  uncompletedTotalTasksCount: any | undefined;
 
   constructor(private dataHandler: DataHandlerService) {
   }
@@ -30,23 +35,22 @@ export class AppComponent implements OnInit {
 
   onSelectCategory(category: Category | undefined): void {
     this.selectedCategoryInApp = category;
-    this.updateTasks();
+    this.updateTasksAndStat();
   }
 
   onUpdateTask(task: Task): void {
     this.dataHandler.updateTask(task).subscribe(() => {
-      this.updateTasks();
+      this.updateTasksAndStat();
     });
   }
 
   onDeleteTask(task: Task): void {
     this.dataHandler.deleteTask(task.id).subscribe(() => {
-      this.updateTasks();
+      this.updateTasksAndStat();
     });
   }
 
   onUpdateCategory(category: Category): void {
-    console.log(category.title);
     this.dataHandler.updateCategory(category)
       .subscribe(() => {
         this.onSearchCategory(category.title);
@@ -59,7 +63,7 @@ export class AppComponent implements OnInit {
         this.selectedCategoryInApp = undefined;
         this.searchCategoryText = '';
         this.updateCategories();
-        this.updateTasks();
+        this.updateTasksAndStat();
       });
   }
 
@@ -80,7 +84,7 @@ export class AppComponent implements OnInit {
   }
 
   onAddTask(task: Task): void {
-    this.dataHandler.addTask(task).subscribe(() => this.updateTasks());
+    this.dataHandler.addTask(task).subscribe(() => this.updateTasksAndStat());
   }
 
   onAddCategory(title: string): void {
@@ -110,5 +114,24 @@ export class AppComponent implements OnInit {
     this.dataHandler.searchCategories(this.searchCategoryText)
       .subscribe(categories => this.categories = categories);
 
+  }
+
+  updateTasksAndStat(): void {
+    this.updateTasks();
+    this.updateStat();
+  }
+
+  private updateStat(): void {
+    zip(
+      this.dataHandler.getTotalCountInCategory(this.selectedCategoryInApp),
+      this.dataHandler.getCompletedCountInCategory(this.selectedCategoryInApp),
+      this.dataHandler.getUnCompletedCountInCategory(this.selectedCategoryInApp),
+      this.dataHandler.getUnCompletedTotalCount(),
+    ).subscribe(array => {
+      this.totalTasksCountInCategory = array[0];
+      this.completedCountInCategory = array[1];
+      this.uncompletedCountInCategory = array[2];
+      this.uncompletedTotalTasksCount = array[3];
+    });
   }
 }
