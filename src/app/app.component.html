@@ -2,10 +2,12 @@
   <app-categories
     [categories]="categories"
     [selectedCategory]="selectedCategoryInApp"
+    [searchCategoryTitle]="searchCategoryText"
     (selectCategory)="onSelectCategory($event)"
     (updateCategory)="onUpdateCategory($event)"
     (deleteCategory)="onDeleteCategory($event)"
     (addCategory)="onAddCategory($event)"
+    (searchCategory)="onSearchCategory($event)"
   ></app-categories>
   <div class="main-panel">
     <!-- Navbar -->

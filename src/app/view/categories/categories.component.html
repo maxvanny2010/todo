@@ -1,4 +1,5 @@
-<div class="sidebar" data-color="purple" data-background-color="white" data-image="../assets/img/sidebar-1.jpg">
+<div class="sidebar" data-background-color="white" data-color="purple"
+     data-image="../assets/img/sidebar-1.jpg">
   <!--
     1: change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
 
@@ -17,6 +18,25 @@
   </div>
   <div class="sidebar-wrapper">
     <ul class="nav">
+      <div class="search-category-area">
+        <mat-form-field class="example-full-width">
+          <input matInput maxlength="256"
+                 #inputSearchCategory
+                 (keydown.escape)="searchCategoryTitle = ''; search()"
+                 (keyup)="search()"
+                 [(ngModel)]="searchCategoryTitle"
+                 placeholder="Поиск категорий"
+          >
+          <button mat-button mat-icon-button
+                  (click)="searchCategoryTitle = ''; search()"
+                  *ngIf="inputSearchCategory.value.trim().length > 0"
+                  aria-label="Clear" class="search-category-button size25 gray"
+                  matSuffix
+          >
+            <mat-icon>clear</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
       <li class="nav-item category"
           [class.active]="selectedCategory === undefined"
           (click)="showTaskBy(undefined)"

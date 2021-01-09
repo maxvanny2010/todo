@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
   private searchTaskText = '';
   private statusFilter!: boolean;
   private priorityFilter!: Priority;
+  searchCategoryText = '';
 
   constructor(private dataHandler: DataHandlerService) {
   }
@@ -24,6 +25,7 @@ export class AppComponent implements OnInit {
     this.dataHandler.getAllTasks().subscribe(tasks => this.tasks = tasks);
     this.dataHandler.getAllPriorities().subscribe(categories => this.priorities = categories);
     this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories);
+    this.onSelectCategory(undefined);
   }
 
   onSelectCategory(category: Category | undefined): void {
@@ -44,17 +46,21 @@ export class AppComponent implements OnInit {
   }
 
   onUpdateCategory(category: Category): void {
+    console.log(category.title);
     this.dataHandler.updateCategory(category)
       .subscribe(() => {
-        this.onSelectCategory(this.selectedCategoryInApp);
+        this.onSearchCategory(category.title);
       });
   }
 
   onDeleteCategory(category: Category): void {
+    console.log(category);
     this.dataHandler.deleteCategory(category)
       .subscribe(() => {
         this.selectedCategoryInApp = undefined;
-        this.onSelectCategory(this.selectedCategoryInApp);
+        this.searchCategoryText = '';
+        this.updateCategories();
+        this.updateTasks();
       });
   }
 
@@ -98,5 +104,13 @@ export class AppComponent implements OnInit {
   private updateCategories(): void {
     this.dataHandler.getAllCategories()
       .subscribe((categories) => this.categories = categories);
+  }
+
+  onSearchCategory(title: string): void {
+    this.searchCategoryText = title;
+    console.log(this.searchCategoryText);
+    this.dataHandler.searchCategories(this.searchCategoryText)
+      .subscribe(categories => this.categories = categories);
+
   }
 }

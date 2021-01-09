@@ -17,6 +17,8 @@ export class CategoriesComponent {
   @Output() deleteCategory: EventEmitter<Category> = new EventEmitter<Category>();
   @Output() updateCategory: EventEmitter<Category> = new EventEmitter<Category>();
   @Output() addCategory: EventEmitter<string> = new EventEmitter<string>();
+  @Output() searchCategory: EventEmitter<string> = new EventEmitter<string>();
+  @Input() searchCategoryTitle = '';
 
   constructor(private dialog: MatDialog) {
   }
@@ -42,8 +44,10 @@ export class CategoriesComponent {
       .subscribe(result => {
         if (result === 'delete') {
           this.deleteCategory.emit(category);
-        } else if (result as Category) {
-          this.updateCategory.emit(result);
+        } else if (result as string) {
+          category.title = result as string;
+          console.log(category);
+          this.updateCategory.emit(category);
         }
       });
   }
@@ -57,5 +61,13 @@ export class CategoriesComponent {
         this.addCategory.emit(result as string);
       }
     });
+  }
+
+  search(): void {
+    if (this.searchCategoryTitle == null) {
+      return;
+    }
+    console.log(this.searchCategoryTitle);
+    this.searchCategory.emit(this.searchCategoryTitle);
   }
 }
