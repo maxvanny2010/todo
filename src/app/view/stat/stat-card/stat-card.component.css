@@ -1,5 +1,6 @@
 .card-title {
-  font-size: 35px
+  font-size: 35px;
+  color: #8a8a8a !important;
 }
 
 .stat-card-title {
@@ -8,5 +9,12 @@
 }
 
 .completed-card {
-  border: 3px solid #93d893 !important;
+  border: 3px solid #8a8a8a !important;
+}
+
+.card-icon {
+  background: linear-gradient(60deg, #66bb6a, #43a047) !important;
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(76, 175, 80, 0.4) !important;
+  /*  background: linear-gradient(60deg, #ab47bc, #8e24aa) !important;
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(156, 39, 176, 0.4) !important;*/
 }

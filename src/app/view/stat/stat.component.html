@@ -3,7 +3,7 @@
     <app-stat-card
       class='col-lg-3 col-md-6 col-sm-6'
       title="Завершенные задачи"
-      iconName="done"
+      iconName="accessibility_new"
       [count]="completeTasksInCategory"
       [countTotal]="totalTasksInCategory"
       [completed]="true"
@@ -13,7 +13,7 @@
     <app-stat-card
       class='col-lg-3 col-md-6 col-sm-6'
       title="Незавершенные задачи"
-      iconName="thumb_down_alt"
+      iconName="rowing"
       [count]="uncompletedTasksInCategory"
       [countTotal]="totalTasksInCategory"
     >
@@ -32,7 +32,7 @@
     <app-stat-card
       class='col-lg-3 col-md-6 col-sm-6'
       title="Процент незавершенных задач"
-      iconName="thumb_down_alt"
+      iconName="rowing"
       [count]="uncompletedTasksInCategory ? (uncompletedTasksInCategory/totalTasksInCategory | percent) : '0 %'">
     </app-stat-card>
 
