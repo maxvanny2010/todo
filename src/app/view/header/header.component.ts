@@ -12,6 +12,7 @@ export class HeaderComponent {
   @Input() categoryName = '';
   @Input() showStat!: boolean;
   @Output() toggleStat: EventEmitter<boolean> = new EventEmitter<boolean>(); // показать/скрыть статистику
+  @Output() toggleMenu: EventEmitter<any> = new EventEmitter<any>(); // показать/скрыть статистику
 
 
   constructor(
@@ -34,5 +35,9 @@ export class HeaderComponent {
 
   showIntroHelp(): void {
     this.introService.startIntroJS(false);
+  }
+
+  onToggleMenu(): void {
+    this.toggleMenu.emit();
   }
 }

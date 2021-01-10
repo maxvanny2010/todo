@@ -27,6 +27,9 @@ export class AppComponent implements OnInit {
   uncompletedTotalTasksCount: any | undefined;
   showStat = true;
 
+  menuOpened!: boolean; // открыть-закрыть
+  showBackdrop!: boolean; // показывать фоновое затемнение или нет
+
   constructor(
     private dataHandler: DataHandlerService,
     private introService: IntroService
@@ -40,6 +43,7 @@ export class AppComponent implements OnInit {
     this.fillCategories();
     this.onSelectCategory(undefined);
     this.introService.startIntroJS(true);
+    this.setMenuValues();
   }
 
   fillCategories(): void {
@@ -184,5 +188,21 @@ export class AppComponent implements OnInit {
 
   toggleStat(showStat: boolean): void {
     this.showStat = showStat;
+  }
+
+  // параметры меню
+  private setMenuValues(): void {
+    this.menuOpened = true; // меню сразу будет открыто по-умолчанию
+    this.showBackdrop = false; // показывать темный фон или нет (нужно больше для мобильной версии)
+
+  }
+
+  // показать-скрыть меню
+  onClosedMenu(): void {
+    this.menuOpened = false;
+  }
+
+  toggleMenu(): void {
+    this.menuOpened = !this.menuOpened;
   }
 }

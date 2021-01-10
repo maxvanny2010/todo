@@ -15158,7 +15158,7 @@ fieldset[disabled] .form-group.is-focused .togglebutton label {
 }
 
 .sidebar {
-  position: fixed;
+  /*position: fixed;*/
   top: 0;
   bottom: 0;
   left: 0;
@@ -15187,7 +15187,7 @@ fieldset[disabled] .form-group.is-focused .togglebutton label {
 .sidebar .sidebar-wrapper {
   position: relative;
   height: calc(100vh - 75px);
-  overflow: auto;
+  /*overflow: auto;*/
   width: 260px;
   z-index: 4;
   padding-bottom: 30px;
@@ -15562,10 +15562,12 @@ fieldset[disabled] .form-group.is-focused .togglebutton label {
   background: rgba(200, 200, 200, 0.2);
 }
 
+/**/
 .main-panel {
   position: relative;
   float: right;
-  width: calc(100% - 260px);
+  /* width: calc(100% - 260px);*/
+  width: 100%;
   transition: 0.33s, cubic-bezier(0.685, 0.0473, 0.346, 1);
 }
 
