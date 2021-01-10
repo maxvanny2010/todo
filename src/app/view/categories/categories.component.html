@@ -1,81 +1,80 @@
-<div class="sidebar" data-background-color="white" data-color="purple">
-  <!--
-    1: change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
+<!--
+  1: change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
 
-    2: add an image using data-image tag
+  2: add an image using data-image tag
 -->
-  <div class="logo">
-    <span class="nav-title">Категории</span>
-    <span class="add-icon-area">
+<div class="logo">
+  <span class="nav-title">Категории</span>
+  <span class="add-icon-area"
+        data-step="5"
+        data-scrollTo="tooltip"
+        data-intro="<strong>Добавить категорию</strong>"
+        data-position="right">
       <button mat-icon-button class="add-icon"
               (click)="openAddDialog()"
       >
         <mat-icon
-          data-step="1"
-          data-scrollTo="tooltip"
-          data-title="Добро пожаловать! 👋"
-          data-intro="<strong>Добавить категорию</strong>"
-          data-position='right'
         >add</mat-icon>
       </button>
     </span>
 
-  </div>
-  <div class="sidebar-wrapper"
-       data-scrollTo="tooltip"
-       data-step="2"
-       data-color="purple"
-       data-intro="<strong>Категории:</strong><br/>
+</div>
+<div class="sidebar-wrapper"
+     data-scrollTo="tooltip"
+     data-step="6"
+     data-color="purple"
+     data-intro="<strong>Категории:</strong><br/>
                              | <small>Поиск</small><br/>
                              | <small>Удаление</small><br/>
                              | <small>Редактирование</small><br/>
                              | <small>Невыполненные задачи</small><br/>"
-       data-position="right"
-  >
-    <ul class="nav">
-      <div class="search-category-area">
-        <mat-form-field class="example-full-width">
-          <input matInput maxlength="256"
-                 #inputSearchCategory
-                 (keydown.escape)="searchCategoryTitle = ''; search()"
-                 (keyup)="search()"
-                 [(ngModel)]="searchCategoryTitle"
-                 placeholder="Поиск категорий"
-          >
-          <button mat-button mat-icon-button
-                  (click)="searchCategoryTitle = ''; search()"
-                  *ngIf="inputSearchCategory.value.trim().length > 0"
-                  aria-label="Clear" class="search-category-button size25 gray"
-                  matSuffix
-          >
-            <mat-icon>clear</mat-icon>
-          </button>
-        </mat-form-field>
-      </div>
-      <li class="nav-item category"
-          [class.active]="selectedCategory === undefined"
-          (click)="showTaskBy(undefined)"
-      >
-        <a class="nav-link pointer">
+     data-position="right"
+>
+  <ul class="nav">
+    <div class="search-category-area">
+      <mat-form-field class="example-full-width">
+        <input matInput maxlength="256"
+               #inputSearchCategory
+               (keydown.escape)="searchCategoryTitle = ''; search()"
+               (keyup)="search()"
+               [(ngModel)]="searchCategoryTitle"
+               placeholder="Поиск категорий"
+        >
+        <button mat-button mat-icon-button
+                (click)="searchCategoryTitle = ''; search()"
+                *ngIf="inputSearchCategory.value.trim().length > 0"
+                aria-label="Clear" class="search-category-button size25 gray"
+                matSuffix
+        >
+          <mat-icon>clear</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    <li class="nav-item category"
+        [class.active]="selectedCategory === undefined"
+        (click)="showTaskBy(undefined)"
+    >
+      <a class="nav-link pointer">
           <span class="all-category-title">
             Все категории
           </span>
-          <span class="uncompleted-count">{{uncompletedTotalTask}}</span>
-        </a>
-      </li>
-      <div class="line"></div>
-      <div *ngIf="categories.length === 0"><p class="not-found">Ничего не найдено</p></div>
-      <li class="nav-item pointer"
-          *ngFor="let mapValue of selectedCategoryMap | keyvalue; let idx = index"
-          [class.active]="mapValue.key === selectedCategory"
-          (click)="showTaskBy(mapValue.key)"
-          (mouseleave)="showEditIcon(undefined)"
-          (mouseenter)="showEditIcon(idx)"
-      >
+        <span class="uncompleted-count">{{uncompletedTotalTask}}</span>
+      </a>
+    </li>
+    <div class="line"></div>
+    <div *ngIf="categories.length === 0"><p class="not-found">Ничего не найдено</p></div>
+    <li class="nav-item pointer"
+        [ngClass]="mapValue.key !== selectedCategory?'uncompleted-color':'completed-color'"
+        *ngFor="let mapValue of selectedCategoryMap | keyvalue; let idx = index"
+        [class.active]="mapValue.key === selectedCategory"
+        (click)="showTaskBy(mapValue.key)"
+        (mouseleave)="showEditIcon(undefined)"
+        (mouseenter)="showEditIcon(idx)"
+    >
 
-        <a class="nav-link">
-          <span class="category-title">{{mapValue.key.title}}</span>
-          <span class="edit-category-icon-area">
+      <a class="nav-link">
+        <span class="category-title">{{mapValue.key.title}}</span>
+        <span class="edit-category-icon-area">
             <mat-icon
               class="edit-category-icon"
               *ngIf="indexMouseMove === idx"
@@ -84,10 +83,9 @@
               edit
             </mat-icon>
           </span>
-          <span class="uncompleted-count"> {{mapValue.value}}</span>
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div class="sidebar-background"></div>
+        <span class="uncompleted-count"> {{mapValue.value}}</span>
+      </a>
+    </li>
+  </ul>
 </div>
+<div class="sidebar-background"></div>

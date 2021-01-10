@@ -14,7 +14,6 @@ export class HeaderComponent {
   @Output() toggleStat: EventEmitter<boolean> = new EventEmitter<boolean>(); // показать/скрыть статистику
   @Output() toggleMenu: EventEmitter<any> = new EventEmitter<any>(); // показать/скрыть статистику
 
-
   constructor(
     private introService: IntroService,
     private dialog: MatDialog) {
@@ -26,7 +25,7 @@ export class HeaderComponent {
 
 
   showSettings(): void {
-    const dialogRef = this.dialog.open(SettingsDialogComponent,
+    this.dialog.open(SettingsDialogComponent,
       {
         autoFocus: false,
         width: '500px'

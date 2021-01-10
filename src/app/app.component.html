@@ -1,17 +1,6 @@
-<ng-sidebar-container style="height: 100vh;">
-  <ng-sidebar
-    (onClosed)="onClosedMenu()"
-    [animate]="true"
-    [autoFocus]="false"
-    [closeOnClickOutside]="false"
-    [closeOnClickBackdrop]="true"
-    [mode]="'push'"
-    [opened]="menuOpened"
-    [position]="'left'"
-    [showBackdrop]="showBackdrop"
-
-  >
-    <div class="sidebar">
+<mat-drawer-container [hasBackdrop]="'false'">
+  <mat-drawer [opened]="menuOpened" [mode]="'push'" position="start" style="width: 14%">
+    <div class="sidebar" data-background-color="white" data-color="green">
       <app-categories
         [categoryMap]="categoryMap"
         [categories]="categories"
@@ -25,8 +14,8 @@
         (searchCategory)="onSearchCategory($event)"
       ></app-categories>
     </div>
-  </ng-sidebar>
-  <div ng-sidebar-content>
+  </mat-drawer>
+  <mat-drawer-content [ngClass]="menuOpened ? 'part':'mat-form-field'">
     <div class="main-panel">
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top">
 
@@ -42,10 +31,10 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-12"
-                 data-step="4"
+                 data-step="7"
                  data-scrollTo="tooltip"
                  data-intro="<strong>Статистика</strong>"
-                 data-position='top'
+                 data-position="top"
             >
               <app-stat
                 [totalTasksInCategory]="totalTasksCountInCategory"
@@ -57,14 +46,14 @@
           </div>
           <div class="row">
             <div class="col-12"
-                 data-step="5"
+                 data-step="8"
                  data-scrollTo="tooltip"
                  data-intro="<strong>Список задач:</strong><br/>
                                          | <small>Фильтры</small><br/>
                                          | <small>Добавление</small><br/>
                                          | <small>Редактирование</small><br/>
                                          | <small>Удаление</small><br/>"
-                 data-position='left'
+                 data-position="left"
             >
               <app-tasks
                 [tasks]="tasks"
@@ -85,8 +74,10 @@
       </div>
       <app-footer></app-footer>
     </div>
-  </div>
-</ng-sidebar-container>
+  </mat-drawer-content>
+</mat-drawer-container>
+
+
 <!--
  <li class="nav-item">
               <div class="d-inline-block">

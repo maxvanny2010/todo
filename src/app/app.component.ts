@@ -27,8 +27,7 @@ export class AppComponent implements OnInit {
   uncompletedTotalTasksCount: any | undefined;
   showStat = true;
 
-  menuOpened!: boolean; // открыть-закрыть
-  showBackdrop!: boolean; // показывать фоновое затемнение или нет
+  menuOpened = true;
 
   constructor(
     private dataHandler: DataHandlerService,
@@ -43,22 +42,6 @@ export class AppComponent implements OnInit {
     this.fillCategories();
     this.onSelectCategory(undefined);
     this.introService.startIntroJS(true);
-    this.setMenuValues();
-  }
-
-  fillCategories(): void {
-    if (this.categoryMap) {
-      this.categoryMap.clear();
-    }
-    this.categories = this.categories.sort((a, b) => a.title.localeCompare(b.title));
-    this.categories.forEach((cat: Category) =>
-      this.dataHandler.getUnCompletedCountInCategory(cat).subscribe(count => this.categoryMap.set(cat, count))
-    );
-  }
-
-  onSelectCategory(category: Category | undefined): void {
-    this.selectedCategoryInApp = category;
-    this.updateTasksAndStat();
   }
 
   onUpdateTask(task: Task): void {
@@ -89,10 +72,10 @@ export class AppComponent implements OnInit {
   onAddTask(task: Task): void {
     this.dataHandler.addTask(task).pipe(
       concatMap((tsk) => {
-          return this.dataHandler.getUnCompletedCountInCategory(task.category)
+          return this.dataHandler.getUnCompletedCountInCategory(tsk.category)
             .pipe(
               map(count => {
-                return ({t: task, count});
+                return ({t: tsk, count});
               }));
         }
       )).subscribe(result => {
@@ -104,10 +87,36 @@ export class AppComponent implements OnInit {
     });
   }
 
+  private updateTasks(): void {
+    this.dataHandler.searchTasks(
+      this.selectedCategoryInApp as Category,
+      this.searchTaskText,
+      this.statusFilter,
+      this.priorityFilter
+    ).subscribe(tasks => {
+      this.tasks = tasks;
+    });
+  }
+
+  fillCategories(): void {
+    if (this.categoryMap) {
+      this.categoryMap.clear();
+    }
+    this.categories = this.categories.sort((a, b) => a.title.localeCompare(b.title));
+    this.categories.forEach((cat: Category) =>
+      this.dataHandler.getUnCompletedCountInCategory(cat).subscribe(count => this.categoryMap.set(cat, count))
+    );
+  }
+
+  onSelectCategory(category: Category | undefined): void {
+    this.selectedCategoryInApp = category;
+    this.updateTasksAndStat();
+  }
+
   onUpdateCategory(category: Category): void {
     this.dataHandler.updateCategory(category)
       .subscribe(() => {
-        this.onSearchCategory(category.title);
+        this.fillCategories();
       });
   }
 
@@ -117,8 +126,35 @@ export class AppComponent implements OnInit {
         this.selectedCategoryInApp = undefined;
         this.searchCategoryText = '';
         this.categoryMap.delete(cat);
-        this.updateTasks();
+        this.updateTasksAndStat();
       });
+  }
+
+  onAddCategory(title: string): void {
+    this.dataHandler.addCategory(title).subscribe(() => {
+      this.updateCategories();
+    });
+  }
+
+  private updateCategories(): void {
+    this.dataHandler.getAllCategories()
+      .subscribe((categories) => {
+        this.categories = categories;
+        this.fillCategories();
+      });
+  }
+
+  onSearchCategory(title: string): void {
+    this.searchCategoryText = title;
+    this.dataHandler.searchCategories(title).subscribe(categories => {
+      this.categories = categories;
+      this.fillCategories();
+      if (title === '') {
+        this.selectedCategoryInApp = undefined;
+        this.searchCategoryText = '';
+        this.updateTasksAndStat();
+      }
+    });
   }
 
   onSearchTasks(searchString: string): void {
@@ -135,36 +171,6 @@ export class AppComponent implements OnInit {
     this.priorityFilter = priority;
     this.updateTasks();
 
-  }
-
-  onAddCategory(title: string): void {
-    this.dataHandler.addCategory(title).subscribe(() => {
-      this.updateCategories();
-    });
-  }
-
-  private updateTasks(): void {
-    this.dataHandler.searchTasks(
-      this.selectedCategoryInApp as Category,
-      this.searchTaskText,
-      this.statusFilter,
-      this.priorityFilter
-    ).subscribe(tasks => {
-      this.tasks = tasks;
-    });
-  }
-
-  private updateCategories(): void {
-    this.dataHandler.getAllCategories()
-      .subscribe((categories) => this.categories = categories);
-  }
-
-  onSearchCategory(title: string): void {
-    this.searchCategoryText = title;
-    this.dataHandler.searchCategories(title).subscribe(categories => {
-      this.categories = categories;
-      this.fillCategories();
-    });
   }
 
   updateTasksAndStat(): void {
@@ -188,18 +194,6 @@ export class AppComponent implements OnInit {
 
   toggleStat(showStat: boolean): void {
     this.showStat = showStat;
-  }
-
-  // параметры меню
-  private setMenuValues(): void {
-    this.menuOpened = true; // меню сразу будет открыто по-умолчанию
-    this.showBackdrop = false; // показывать темный фон или нет (нужно больше для мобильной версии)
-
-  }
-
-  // показать-скрыть меню
-  onClosedMenu(): void {
-    this.menuOpened = false;
   }
 
   toggleMenu(): void {

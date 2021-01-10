@@ -7,3 +7,14 @@
   width: 100%;
 }
 
+.category-title-header {
+  background-color: #eaeaea;
+  border-radius: 2px;
+  padding: 3px;
+  margin-left: 110px;
+  color: #2f8133;
+  width: 17.25%;
+  display: inline-block;
+  text-align: center;
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.2);
+}

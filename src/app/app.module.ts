@@ -35,6 +35,7 @@ import {SettingsDialogComponent} from './dialog/settings-dialog/settings-dialog.
 import {PrioritiesComponent} from './view/priorities/priorities.component';
 import {EditPriorityDialogComponent} from './dialog/edit-priority-dialog/edit-priority-dialog.component';
 import {SidebarModule} from 'ng-sidebar';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 registerLocaleData(localRu);
 
@@ -75,6 +76,7 @@ registerLocaleData(localRu);
     MatCheckboxModule,
     ColorPickerModule,
     SidebarModule.forRoot(),
+    MatSidenavModule
   ],
   providers: [],
   bootstrap: [AppComponent]

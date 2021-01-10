@@ -47,7 +47,7 @@ span.add-icon-area {
   display: inline-block;
   font-size: 20px;
   text-align: center;
-  vertical-align: middle
+  vertical-align: middle;
 }
 
 .search-category-area {
@@ -75,9 +75,17 @@ span.add-icon-area {
   background-color: #eaeaea;
   border-radius: 3px;
   padding: 5px;
-  color: black;
+  color: #2f8133;
   width: 15%;
   display: inline-block;
   text-align: center;
-  box-shadow: 0 3px 4px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.uncompleted-color {
+  color: #8a8a8a !important;
+}
+
+.completed-color {
+  color: #eaeaea !important;
 }

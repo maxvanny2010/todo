@@ -5,27 +5,51 @@
               type="button"
               (click)="onToggleMenu()"
       >
-        <mat-icon>menu</mat-icon>
+        <mat-icon data-scrollTo="tooltip"
+                  data-step="2"
+                  data-intro="<strong>Меню</strong><br/>"
+                  data-position="bottom"
+        >menu
+        </mat-icon>
       </button>
-      <p class="navbar-brand">{{categoryName}}</p>
-
-      <p class="link navbar-brand" (click)="onToggleStat()" *ngIf="showStat">Скрыть статистику</p>
-      <p class="link navbar-brand" (click)="onToggleStat()" *ngIf="!showStat">Показать статистику </p>
+      <span class="navbar-brand category-title-header"
+            data-step="0"
+            data-scrollTo="tooltip"
+            data-title="Добро пожаловать! 👋"
+            data-position="bottom"
+      >
+        {{categoryName}}
+      </span>
+      <!-- <p class="link navbar-brand" (click)="onToggleStat()" *ngIf="showStat">Скрыть статистику</p>
+       <p class="link navbar-brand" (click)="onToggleStat()" *ngIf="!showStat">Показать статистику </p>-->
     </div>
 
     <div class="col-2 text-right align-self-top">
+      <button mat-icon-button
+              class="header-icon"
+              (click)="onToggleStat()"
+      >
+        <mat-icon
+          data-scrollTo="tooltip"
+          data-step="3"
+          data-intro="<strong>Статистика:</strong><br/>
+                             | </small>Показать</small><br/>
+                             | </small>Скрыть</small><br/>"
+          data-position="left"
+        >book_online
+        </mat-icon>
+      </button>
       <button mat-icon-button
               class="header-icon"
               (click)="showSettings()"
       >
         <mat-icon
           data-scrollTo="tooltip"
-          data-step="6"
-          data-color="purple"
+          data-step="4"
           data-intro="<strong>Статус</strong><br/>
                              | </small>Добавление</small><br/>
                              | </small>Редактирование</small><br/>"
-          data-position="bottom"
+          data-position="left"
         >settings
         </mat-icon>
       </button>
