@@ -78,7 +78,7 @@
         </button>
       </div>
       <div class="text-right col-6">
-        <button mat-raised-button color="primary"
+        <button mat-raised-button color="primary" style="background: #43a047 !important;"
                 (click)="openAddTaskDialog()"
         >Добавить
         </button>
@@ -187,7 +187,7 @@
               class="col-select text-right"
               *matCellDef="let task"
           >
-            <mat-checkbox
+            <mat-checkbox color="warn"
               [checked]="task['completed']"
               (click)="$event.stopPropagation()"
               (change)="$event ? onToggleStatus(task): null"
