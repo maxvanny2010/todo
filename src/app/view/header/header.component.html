@@ -12,9 +12,20 @@
               class="header-icon"
               (click)="showSettings()"
       >
-        <mat-icon>settings</mat-icon>
+        <mat-icon
+          data-scrollTo="tooltip"
+          data-step="6"
+          data-color="purple"
+          data-intro="<strong>Статус</strong><br/>
+                             | </small>Добавление</small><br/>
+                             | </small>Редактирование</small><br/>"
+          data-position="bottom"
+        >settings
+        </mat-icon>
       </button>
-      <button mat-icon-button class="header-icon">
+      <button mat-icon-button class="header-icon"
+              (click)="showIntroHelp()"
+      >
         <mat-icon>help</mat-icon>
       </button>
     </div>

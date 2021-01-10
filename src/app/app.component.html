@@ -1,16 +1,18 @@
 <div class="wrapper ">
-  <app-categories
-    [categoryMap]="categoryMap"
-    [categories]="categories"
-    [selectedCategory]="selectedCategoryInApp"
-    [uncompletedTotalTask]="uncompletedTotalTasksCount"
-    [searchCategoryTitle]="searchCategoryText"
-    (selectCategory)="onSelectCategory($event)"
-    (updateCategory)="onUpdateCategory($event)"
-    (deleteCategory)="onDeleteCategory($event)"
-    (addCategory)="onAddCategory($event)"
-    (searchCategory)="onSearchCategory($event)"
-  ></app-categories>
+  <div class="sidebar">
+    <app-categories
+      [categoryMap]="categoryMap"
+      [categories]="categories"
+      [selectedCategory]="selectedCategoryInApp"
+      [uncompletedTotalTask]="uncompletedTotalTasksCount"
+      [searchCategoryTitle]="searchCategoryText"
+      (selectCategory)="onSelectCategory($event)"
+      (updateCategory)="onUpdateCategory($event)"
+      (deleteCategory)="onDeleteCategory($event)"
+      (addCategory)="onAddCategory($event)"
+      (searchCategory)="onSearchCategory($event)"
+    ></app-categories>
+  </div>
   <div class="main-panel">
     <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top">
 
@@ -23,15 +25,32 @@
     </nav>
     <div class="content">
       <div class="container-fluid">
-        <app-stat
-          [totalTasksInCategory]="totalTasksCountInCategory"
-          [completeTasksInCategory]="completedCountInCategory"
-          [uncompletedTasksInCategory]="uncompletedCountInCategory"
-          [showStat]="showStat"
-        >
-        </app-stat>
         <div class="row">
-          <div class="col-12">
+          <div class="col-12"
+               data-step="4"
+               data-scrollTo="tooltip"
+               data-intro="<strong>Статистика</strong>"
+               data-position='top'
+          >
+            <app-stat
+              [totalTasksInCategory]="totalTasksCountInCategory"
+              [completeTasksInCategory]="completedCountInCategory"
+              [uncompletedTasksInCategory]="uncompletedCountInCategory"
+              [showStat]="showStat"
+            ></app-stat>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12"
+               data-step="5"
+               data-scrollTo="tooltip"
+               data-intro="<strong>Список задач:</strong><br/>
+                                         | <small>Фильтры</small><br/>
+                                         | <small>Добавление</small><br/>
+                                         | <small>Редактирование</small><br/>
+                                         | <small>Удаление</small><br/>"
+               data-position='left'
+          >
             <app-tasks
               [tasks]="tasks"
               [priorities]="priorities"
