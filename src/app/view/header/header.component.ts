@@ -46,4 +46,11 @@ export class HeaderComponent {
   onToggleMenu(): void {
     this.toggleMenu.emit();
   }
+
+  isMobileButton(): string {
+    if (this.isMobile || this.isTablet) {
+      return '30';
+    }
+    return '';
+  }
 }
