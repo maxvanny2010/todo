@@ -77,7 +77,7 @@
         <span class="edit-category-icon-area">
             <mat-icon
               class="edit-category-icon"
-              *ngIf="indexMouseMove === idx"
+              *ngIf="indexMouseMove === idx || (isMobile || isTablet)"
               (click)="$event.stopPropagation(); openEditDialog(mapValue.key)"
             >
               edit
