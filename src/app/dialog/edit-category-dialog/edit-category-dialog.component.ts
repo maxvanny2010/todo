@@ -2,6 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 import {OperType} from '../OperType';
+import {DeviceDetectorService} from 'ngx-device-detector';
 
 @Component({
   selector: 'app-edit-category-dialog',
@@ -12,12 +13,15 @@ export class EditCategoryDialogComponent implements OnInit {
   dialogTitle = '';
   categoryTitle = '';
   operType: OperType | undefined;
+  isMobile!: boolean;
 
   constructor(
     private dialogRef: MatDialogRef<EditCategoryDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: [string, string, OperType],
-    private dialog: MatDialog
+    private deviceService: DeviceDetectorService,
+    private dialog: MatDialog,
   ) {
+    this.isMobile = this.deviceService.isMobile();
   }
 
   ngOnInit(): void {
