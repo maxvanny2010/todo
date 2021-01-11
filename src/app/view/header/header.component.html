@@ -12,14 +12,18 @@
         >menu
         </mat-icon>
       </button>
-      <span class="navbar-brand category-title-header"
-            data-step="0"
-            data-scrollTo="tooltip"
-            data-title="Добро пожаловать! 👋"
-            data-position="bottom"
+      <p class="navbar-brand"
+         *ngIf="!isMobile; else mobile"
+         data-step="0"
+         data-scrollTo="tooltip"
+         data-title="Добро пожаловать! 👋"
+         data-position="bottom"
       >
         {{categoryName}}
-      </span>
+      </p>
+      <ng-template #mobile><p class="navbar-brand">
+        {{categoryName}}
+      </p></ng-template>
       <!-- <p class="link navbar-brand" (click)="onToggleStat()" *ngIf="showStat">Скрыть статистику</p>
        <p class="link navbar-brand" (click)="onToggleStat()" *ngIf="!showStat">Показать статистику </p>-->
     </div>
@@ -53,7 +57,7 @@
         >settings
         </mat-icon>
       </button>
-      <button mat-icon-button class="header-icon"
+      <button *ngIf="!isMobile" mat-icon-button class="header-icon"
               (click)="showIntroHelp()"
       >
         <mat-icon>help</mat-icon>

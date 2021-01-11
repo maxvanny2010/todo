@@ -56,3 +56,11 @@ app-header {
 .part {
   width: 86% !important;
 }
+
+.menu-mobile {
+  width: 70% !important;
+}
+
+.menu-desktop {
+  width: 14% !important;
+}

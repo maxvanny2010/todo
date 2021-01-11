@@ -4,6 +4,9 @@ import {DataHandlerService} from './services/data-handler.service';
 import {zip} from 'rxjs';
 import {concatMap, map} from 'rxjs/operators';
 import {IntroService} from './services/intro.service';
+import {DeviceDetectorService} from 'ngx-device-detector';
+import {MatDrawerMode} from '@angular/material/sidenav/drawer';
+import {DatepickerDropdownPositionX} from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-root',
@@ -26,13 +29,21 @@ export class AppComponent implements OnInit {
   uncompletedCountInCategory: any | undefined;
   uncompletedTotalTasksCount: any | undefined;
   showStat = true;
-
   menuOpened = true;
+  menuPosition!: DatepickerDropdownPositionX;
+  backDrop = false;
+  menuMode!: MatDrawerMode;
+  isMobile!: boolean;
+  isTablet!: boolean;
 
   constructor(
     private dataHandler: DataHandlerService,
-    private introService: IntroService
+    private introService: IntroService,
+    private deviceService: DeviceDetectorService,
   ) {
+    this.isMobile = this.deviceService.isMobile();
+    this.isTablet = this.deviceService.isTablet();
+    this.showStat = !this.isMobile;
   }
 
   ngOnInit(): void {
@@ -41,7 +52,23 @@ export class AppComponent implements OnInit {
     this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories);
     this.fillCategories();
     this.onSelectCategory(undefined);
-    this.introService.startIntroJS(true);
+    if (!this.isMobile && !this.isTablet) {
+      this.introService.startIntroJS(true);
+    }
+    this.setMenuValues();
+  }
+
+  setMenuValues(): void {
+    this.menuPosition = 'start';
+    if (this.isMobile) {
+      this.menuOpened = false;
+      this.menuMode = 'over';
+      this.backDrop = true;
+    } else {
+      this.menuOpened = true;
+      this.menuMode = 'push';
+      this.backDrop = false;
+    }
   }
 
   onUpdateTask(task: Task): void {

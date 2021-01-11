@@ -1,5 +1,7 @@
-<mat-drawer-container [hasBackdrop]="'false'">
-  <mat-drawer [opened]="menuOpened" [mode]="'push'" position="start" style="width: 14%">
+<mat-drawer-container [hasBackdrop]="backDrop">
+  <mat-drawer [opened]="menuOpened" [mode]="menuMode"
+              [ngClass]="menuOpened && !isMobile? 'menu-desktop':'menu-mobile'"
+  >
     <div class="sidebar" data-background-color="white" data-color="green">
       <app-categories
         [categoryMap]="categoryMap"
@@ -15,7 +17,9 @@
       ></app-categories>
     </div>
   </mat-drawer>
-  <mat-drawer-content [ngClass]="menuOpened ? 'part':'mat-form-field'">
+  <mat-drawer-content
+    [ngClass]="menuOpened && !isMobile? 'part':'mat-form-field'"
+  >
     <div class="main-panel">
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top">
 

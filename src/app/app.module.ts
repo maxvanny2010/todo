@@ -76,7 +76,7 @@ registerLocaleData(localRu);
     MatCheckboxModule,
     ColorPickerModule,
     SidebarModule.forRoot(),
-    MatSidenavModule
+    MatSidenavModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
