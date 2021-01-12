@@ -20,7 +20,7 @@ export class TestData {
     {id: 1, title: 'Низкий', color: '#e5e5e5'},
     {id: 2, title: 'Средний', color: '#85D1B2'},
     {id: 3, title: 'Высокий', color: '#F1828D'},
-    {id: 4, title: 'Очень срочно!', color: '#F1128D'}
+    {id: 4, title: 'Очень срочно!', color: '#ff2121'}
   ];
 
   static tasks: Task[] = [
@@ -44,7 +44,7 @@ export class TestData {
 
     {
       id: 3,
-      title: 'Убрать в комнате, полить растения',
+      title: 'Убрать в доме, полить растения',
       priority: TestData.priorities[2],
       completed: true,
       category: TestData.categories[1]
@@ -60,7 +60,7 @@ export class TestData {
     },
     {
       id: 5,
-      title: 'Найти и выучить учебник по квантовой физике',
+      title: 'Выучить учебники по Angular and Spring',
       completed: false,
       category: TestData.categories[2]
     },
@@ -104,7 +104,7 @@ export class TestData {
 
     {
       id: 11,
-      title: 'Организовать детский праздник ',
+      title: 'Организовать детский праздник',
       completed: false
     },
 
@@ -157,7 +157,7 @@ export class TestData {
 
     {
       id: 18,
-      title: 'Сравнить новый айпад с самсунгом',
+      title: 'Купить четвёртый монитор',
       priority: TestData.priorities[0],
       completed: false,
       category: TestData.categories[7],
