@@ -1,27 +1,23 @@
-# Todo
+![Deploy to Firebase Hosting on merge](https://github.com/maxvanny2010/budget/workflows/Deploy%20to%20Firebase%20Hosting%20on%20merge/badge.svg?branch=master)
+<br/>
+<br/>
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.2.
+**Simple Todo app by Angular/Material.(desktop|mobile)**<br/>
 
-## Development server
+**Home page**: https://todo-a7650.web.app/
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+**One page**<br/>
+**Filters category, task, priority, status**<br/>
+**Edit, Add, Remove, Resolve, Unresolved category, task, priority, text task**<br/>
+**Statistic resolve task**<br/>
 
-## Code scaffolding
+**To use**:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+1. Angular 9.<br/>
+2. Firebase.<br/>
+3. Material.<br/>
+4. Intro.<br/>
+5. ColorPicker<br/>
+in Angular:  Service, Module, Pipe, Material <br/>
+in Firebase: Hosting.
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
