@@ -36,6 +36,8 @@ import {PrioritiesComponent} from './view/priorities/priorities.component';
 import {EditPriorityDialogComponent} from './dialog/edit-priority-dialog/edit-priority-dialog.component';
 import {SidebarModule} from 'ng-sidebar';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {environment} from '../environments/environment';
 
 registerLocaleData(localRu);
 
@@ -77,6 +79,7 @@ registerLocaleData(localRu);
     ColorPickerModule,
     SidebarModule.forRoot(),
     MatSidenavModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
   ],
   providers: [],
   bootstrap: [AppComponent]
