@@ -4,6 +4,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog
 import {DataHandlerService} from '../../services/data-handler.service';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 import {OperType} from '../OperType';
+import {DeviceDetectorService} from 'ngx-device-detector';
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -20,6 +21,7 @@ export class EditTaskDialogComponent implements OnInit {
   operType!: OperType;
   categories: Category[] = [];
   priorities: Priority[] = [];
+  isMobile!: boolean;
   /* link to current modal window*/
   /* data was to sent into modal window*/
   /*service*/
@@ -30,8 +32,10 @@ export class EditTaskDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<EditTaskDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: [Task, string, OperType],
     private dataHandler: DataHandlerService,
+    private deviceService: DeviceDetectorService,
     private dialog: MatDialog
   ) {
+    this.isMobile = this.deviceService.isMobile();
   }
 
   ngOnInit(): void {

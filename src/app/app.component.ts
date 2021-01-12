@@ -151,9 +151,9 @@ export class AppComponent implements OnInit {
     this.dataHandler.deleteCategory(category)
       .subscribe((cat) => {
         this.selectedCategoryInApp = undefined;
-       /* this.searchCategoryText = '';*/
+        /* this.searchCategoryText = '';*/
         this.categoryMap.delete(cat);
-       /* this.fillCategories();*/
+        /* this.fillCategories();*/
         this.updateTasksAndStat();
       });
   }

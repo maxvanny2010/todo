@@ -58,40 +58,54 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <div class="col-md-5 col-12">
-    <button mat-raised-button color="primary"
-            style="background: #43a047 !important;"
-            [disabled]="inputTitle.value.trim().length == 0"
-            (click)="onConfirm()"
-    >
-      Сохранить
-    </button>
-    <button mat-raised-button
-            (click)="onCancel()"
-    >
-      Отмена
-    </button>
+  <div class="col-md-6"
+       [class.d-flex]="isMobile"
+  >
+    <div class="d-inline">
+      <button mat-raised-button color="primary"
+              style="background: #43a047 !important;"
+              [disabled]="inputTitle.value.trim().length == 0"
+              (click)="onConfirm()"
+      >
+        Сохранить
+      </button>
+    </div>
+    <div class="d-inline ml-2">
+      <button mat-raised-button
+              (click)="onCancel()"
+      >
+        Отмена
+      </button>
+    </div>
   </div>
-
-  <div class="col-md-7 col-12 text-right">
-    <button mat-button class="green"
-            *ngIf="!task.completed && canActivateDeactivate()"
-            (click)="complete()"
-    >
-      Завершить
-    </button>
-    <button mat-button class="green"
-            *ngIf="task.completed  && canActivateDeactivate()"
-            (click)="activate()"
-    >
-      Активировать
-    </button>
-    <button mat-button class="red"
-            *ngIf="canDelete()"
-            (click)="delete()"
-    >
-      Удалить
-    </button>
+  <div class="col-md-6"
+       [class.d-flex]="isMobile"
+       [class.text-right]="!isMobile"
+  >
+    <div class="d-inline">
+      <button mat-button class="greene"
+              *ngIf="!task.completed && canActivateDeactivate()"
+              (click)="complete()"
+      >
+        Завершить
+      </button>
+    </div>
+    <div class="d-inline">
+      <button mat-button class="green"
+              *ngIf="task.completed  && canActivateDeactivate()"
+              (click)="activate()"
+      >
+        Обновить
+      </button>
+    </div>
+    <div class="d-inline mr-4">
+      <button mat-button class="red"
+              *ngIf="canDelete()"
+              (click)="delete()"
+      >
+        Удалить
+      </button>
+    </div>
   </div>
 </mat-dialog-actions>
 
