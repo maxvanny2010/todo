@@ -2,18 +2,18 @@
   <p mat-dialog-title>{{dialogTitle}}</p>
   <mat-form-field>
     <mat-label>Название (15 символов)</mat-label>
-    <input matInput
-           #inputTitle
-           [(ngModel)]="categoryTitle"
+    <input #inputTitle
            (keydown.enter)="onConfirm()"
+           [(ngModel)]="categoryTitle"
+           matInput
            maxlength="15"
     />
 
-    <button mat-button mat-icon-button matSuffix
-            *ngIf="categoryTitle.trim().length > 0"
+    <button (click)="categoryTitle= ''" *ngIf="categoryTitle.trim().length > 0" aria-label="Clear"
             class="clear-icon size25"
-            aria-label="Clear"
-            (click)="categoryTitle= ''"
+            mat-button
+            mat-icon-button
+            matSuffix
     >
       <mat-icon>clear</mat-icon>
     </button>
@@ -21,34 +21,34 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <div class="col-12 text-center"
-       [class.d-flex]="isMobile"
+  <div [class.d-flex]="isMobile"
+       class="col-12 text-center"
   >
     <div class="d-inline">
-      <button mat-raised-button color="primary"
+      <button (click)="onConfirm()" [disabled]="inputTitle.value.trim().length == 0"
+              color="primary"
+              mat-raised-button
               style="background: #43a047 !important;"
-              [disabled]="inputTitle.value.trim().length == 0"
-              (click)="onConfirm()"
       >
         Сохранить
       </button>
     </div>
     <div class="d-inline ml-2">
-      <button mat-raised-button
-              (click)="onCancel()"
+      <button (click)="onCancel()"
+              mat-raised-button
       >
         Отмена
       </button>
     </div>
 
-    <div class="text-center"
-         [class.d-inline]="isMobile"
+    <div [class.d-inline]="isMobile"
          [class.ml-2]="isMobile"
+         class="text-center"
     >
-      <button mat-button class="red"
+      <button (click)="onDelete()" *ngIf="canDelete()"
               [class.mat-raised-button]="isMobile"
-              *ngIf="canDelete()"
-              (click)="onDelete()"
+              class="red"
+              mat-button
       >
         Удалить
       </button>

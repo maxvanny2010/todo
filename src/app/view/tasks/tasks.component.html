@@ -2,17 +2,17 @@
   <div class="col-md-3 col-sm-12">
     <!--    поиск задач-->
     <mat-form-field>
-      <input matInput
-             #filterInput
+      <input #filterInput
              (keydown.escape)="searchTaskText = ''; onFilterByTitle()"
              (keyup)="onFilterByTitle()"
              [(ngModel)]="searchTaskText"
+             matInput
              placeholder="Поиск в текущей категории"
       >
-      <button mat-button mat-icon-button
-              (click)="searchTaskText = ''; onFilterByTitle()"
-              *ngIf="filterInput.value.trim().length > 0"
-              aria-label="Clear" class="clear-icon size25 gray"
+      <button (click)="searchTaskText = ''; onFilterByTitle()" *ngIf="filterInput.value.trim().length > 0"
+              aria-label="Clear"
+              class="clear-icon size25 gray"
+              mat-button mat-icon-button
               matSuffix
       >
         <mat-icon>clear</mat-icon>
@@ -29,10 +29,10 @@
         <mat-option [value]="true">Завершенные задачи</mat-option>
         <mat-option [value]="false">Незавершенные задачи</mat-option>
       </mat-select>
-      <button mat-button mat-icon-button
-              (click)="$event.stopPropagation(); onFilterByStatus(null)"
-              *ngIf="selectedStatusFilter != null"
-              aria-label="Clear" class="clear-icon size25 gray"
+      <button (click)="$event.stopPropagation(); onFilterByStatus(null)" *ngIf="selectedStatusFilter != null"
+              aria-label="Clear"
+              class="clear-icon size25 gray"
+              mat-button mat-icon-button
               matSuffix
 
       >
@@ -50,10 +50,10 @@
         <mat-option [value]="null">Все приоритеты</mat-option>
         <mat-option *ngFor="let property of priorities" [value]="property">{{property.title}}</mat-option>
       </mat-select>
-      <button mat-button mat-icon-button
-              (click)="$event.stopPropagation(); onFilterByPriority(null)"
-              *ngIf="selectPriorityFilter != null"
-              aria-label="Clear" class="class-icon size25 gray"
+      <button (click)="$event.stopPropagation(); onFilterByPriority(null)" *ngIf="selectPriorityFilter != null"
+              aria-label="Clear"
+              class="class-icon size25 gray"
+              mat-button mat-icon-button
               matSuffix
       >
         <mat-icon>clear</mat-icon>
@@ -62,27 +62,27 @@
 
   </div>
   <div class="col-md-3 col-sm-12 text-right">
-    <div class="row"
-         [class.flex-sm-column]="isMobile || isTablet"
+    <div [class.flex-sm-column]="isMobile || isTablet"
+         class="row"
     >
       <div class="text-left col-5">
-        <button mat-button
-                class="nopadding-left"
+        <button (click)="$event.stopPropagation();
+                 onFilterByStatus(null);  searchTaskText = ''; onFilterByTitle(); onFilterByPriority(null)"
                 *ngIf="
                 selectedStatusFilter !== null
                 || selectPriorityFilter != null
                 ||  (searchTaskText != null && searchTaskText.trim() != '')"
-                (click)="$event.stopPropagation();
-                 onFilterByStatus(null);  searchTaskText = ''; onFilterByTitle(); onFilterByPriority(null)"
                 aria-label="Clear"
+                class="nopadding-left"
+                mat-button
                 matSuffix
         >
           Сбросить фильтры
         </button>
       </div>
       <div class="text-right col-7">
-        <button mat-raised-button color="primary" style="background: #43a047 !important;"
-                (click)="openAddTaskDialog()"
+        <button (click)="openAddTaskDialog()" color="primary" mat-raised-button
+                style="background: #43a047 !important;"
         >Добавить
         </button>
       </div>
@@ -90,32 +90,32 @@
   </div>
 </div>
 <div class="col-md-12 task-list">
-  <div class="card" *ngIf="!isMobile && !isTablet">
-    <div class="card-body table-responsive" *ngIf="tasks && tasks.length > 0; else notFound">
-      <table mat-table [dataSource]="dataSource" matSort>
+  <div *ngIf="!isMobile && !isTablet" class="card">
+    <div *ngIf="tasks && tasks.length > 0; else notFound" class="card-body table-responsive">
+      <table [dataSource]="dataSource" mat-table matSort>
         <!--color-->
         <ng-container matColumnDef="color">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
-          <td class="col-color" *matCellDef="let task" [style.background-color]="getPriorityColor(task)"></td>
+          <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
+          <td *matCellDef="let task" [style.background-color]="getPriorityColor(task)" class="col-color"></td>
         </ng-container>
 
         <!--seq id-->
         <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
-          <td mat-cell
+          <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
+          <td *matCellDef="let idx = index"
               class="col-id"
-              *matCellDef="let idx = index">
+              mat-cell>
             {{idx + 1}}
           </td>
         </ng-container>
 
         <!--title task-->
         <ng-container matColumnDef="title">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Название</th>
-          <td mat-cell
-              class="col-title pointer" *matCellDef="let task"
-              [class.completed]="task['completed']"
-              (click)="openEditTaskDialog(task)"
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Название</th>
+          <td (click)="openEditTaskDialog(task)"
+              *matCellDef="let task" [class.completed]="task['completed']"
+              class="col-title pointer"
+              mat-cell
           >
             {{task.title}}
           </td>
@@ -123,11 +123,11 @@
 
         <!--date-->
         <ng-container matColumnDef="date">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Срок</th>
-          <td mat-cell
-              class="col-date"
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Срок</th>
+          <td *matCellDef="let task"
               [ngClass]="{'completed':task['completed'], 'novalue':task.date == null}"
-              *matCellDef="let task"
+              class="col-date"
+              mat-cell
           >
             {{task.date | taskDate}}
           </td>
@@ -135,11 +135,11 @@
 
         <!--priority-->
         <ng-container matColumnDef="priority">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Приоритет</th>
-          <td mat-cell
-              class="col-priority"
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Приоритет</th>
+          <td *matCellDef="let task"
               [ngClass]="{'completed': task['completed'],'novalue':task.priority == null}"
-              *matCellDef="let task"
+              class="col-priority"
+              mat-cell
 
           >
             {{task.priority ? task.priority.title : 'Без приоритета'}}
@@ -148,35 +148,35 @@
 
         <!--category-->
         <ng-container matColumnDef="category">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Категория</th>
-          <td mat-cell
-              class="col-category"
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Категория</th>
+          <td (click)="!task['completed'] && task['category'] && onSelectCategory(task['category'])"
+              *matCellDef="let task"
               [ngClass]="{'completed':task['completed'],'novalue':task['category'] == null,
              'link': !task['completed'] && task['category']}"
-              *matCellDef="let task"
-              (click)="!task['completed'] && task['category'] && onSelectCategory(task['category'])"
+              class="col-category"
+              mat-cell
           >
             {{task['category'] ? task['category'].title : "Без категории"}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="operations">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell
-              class="col-operations"
+          <th *matHeaderCellDef mat-header-cell></th>
+          <td *matCellDef="let task"
               [class.completed]="task['completed']"
-              *matCellDef="let task"
+              class="col-operations"
+              mat-cell
           >
 
-            <button mat-icon-button
+            <button (click)="openDeleteDialog(task)"
                     class="delete-icon"
-                    (click)="openDeleteDialog(task)"
+                    mat-icon-button
             >
               <mat-icon aria-hidden="false">delete</mat-icon>
             </button>
-            <button mat-icon-button
+            <button (click)="openEditTaskDialog(task)"
                     class="edit-icon"
-                    (click)="openEditTaskDialog(task)"
+                    mat-icon-button
             >
               <mat-icon aria-hidden="false">edit</mat-icon>
             </button>
@@ -185,15 +185,15 @@
         </ng-container>
 
         <ng-container matColumnDef="select">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell
+          <th *matHeaderCellDef mat-header-cell></th>
+          <td *matCellDef="let task"
               class="col-select text-right"
-              *matCellDef="let task"
+              mat-cell
           >
-            <mat-checkbox color="warn"
-                          [checked]="task['completed']"
+            <mat-checkbox (change)="$event ? onToggleStatus(task): null"
                           (click)="$event.stopPropagation()"
-                          (change)="$event ? onToggleStatus(task): null"
+                          [checked]="task['completed']"
+                          color="warn"
             >
             </mat-checkbox>
           </td>
@@ -214,37 +214,37 @@
   <div *ngFor="let task of tasks; let idx = index; "
        [ngClass]="{'completed': task.completed}">
 
-    <div class="card card-mobile"
+    <div (click)="$event.stopPropagation(); openEditTaskDialog(task)"
          [ngClass]="{'background-completed': task.completed}"
-         (click)="$event.stopPropagation(); openEditTaskDialog(task)"
+         class="card card-mobile"
     >
-      <div class="mobile-priority-top"
-           [ngClass]="{'background-completed': task.completed}"
+      <div [ngClass]="{'background-completed': task.completed}"
            [style.background-color]="getPriorityColor(task)"
+           class="mobile-priority-top"
       >
       </div>
       <div class="row">
         <div class="mobile-title-inner  col-9 col-md-10 align-top">
-          <div class="mobile-title"
-               [class.completed]="task.completed"
+          <div [class.completed]="task.completed"
+               class="mobile-title"
           >{{task.title}}
           </div>
         </div>
         <div class="col-2 col-md-1 align-top mobile-check text-right">
-          <button mat-icon-button
-                  class="nowidth"
+          <button (click)="$event.stopPropagation(); onToggleStatus(task)"
                   *ngIf="!task.completed"
-                  (click)="$event.stopPropagation(); onToggleStatus(task)"
+                  class="nowidth"
+                  mat-icon-button
           >
-            <mat-icon class="check-icon-notcompleted"
-                      (click)="$event.stopPropagation(); onToggleStatus(task)"
+            <mat-icon (click)="$event.stopPropagation(); onToggleStatus(task)"
+                      class="check-icon-notcompleted"
             >check_circle_outline
             </mat-icon>
           </button>
-          <button mat-icon-button
-                  class="nowidth"
+          <button (click)="$event.stopPropagation(); onToggleStatus(task)"
                   *ngIf="task.completed"
-                  (click)="$event.stopPropagation(); onToggleStatus(task)"
+                  class="nowidth"
+                  mat-icon-button
           >
             <mat-icon class="check-icon-completed">check_circle</mat-icon>
           </button>
@@ -252,8 +252,8 @@
       </div>
       <div class="row">
         <div class="mobile-info-inner  col-12 align-top">
-          <div class="mobile-category"
-               [ngClass]="{'completed': task.completed}"
+          <div [ngClass]="{'completed': task.completed}"
+               class="mobile-category"
           >
             <p
               [ngClass]="{'category': !task.completed && task.category}">
@@ -261,15 +261,15 @@
             </p>
           </div>
 
-          <div class="mobile-priority" *ngIf="task.priority">
+          <div *ngIf="task.priority" class="mobile-priority">
             <p [ngClass]="{'priority': !task.completed, 'completed': task.completed}"
                [style.background-color]="getMobilePriorityBgColor(task)"
             >{{task.priority.title}}
             </p>
           </div>
 
-          <div class="mobile-date"
-               [ngClass]="{'completed': task.completed}"
+          <div [ngClass]="{'completed': task.completed}"
+               class="mobile-date"
           >
             {{task.date | taskDate}}
           </div>

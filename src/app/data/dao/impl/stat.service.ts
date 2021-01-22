@@ -6,6 +6,7 @@ import {HttpClient} from '@angular/common/http';
 import {CommonService} from './CommonService';
 
 export const STAT_URL_TOKEN = new InjectionToken<string>('url');
+
 @Injectable({
   providedIn: 'root'
 })

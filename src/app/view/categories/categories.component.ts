@@ -3,7 +3,6 @@ import {Category} from '../../model/interfaces';
 import {EditCategoryDialogComponent} from '../../dialog/edit-category-dialog/edit-category-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {OperType} from '../../dialog/OperType';
-import {DataHandlerService} from '../../services/data-handler.service';
 import {DeviceDetectorService} from 'ngx-device-detector';
 
 @Component({
@@ -26,18 +25,16 @@ export class CategoriesComponent {
   isMobile!: boolean;
   isTablet!: boolean;
 
-  @Input('categoryMap')
-  set setCategoryMap(categoryMap: Map<Category, number>) {
-    this.selectedCategoryMap = categoryMap;
-  }
-
-
   constructor(
-    private dataHandler: DataHandlerService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog) {
     this.isMobile = this.deviceService.isMobile();
     this.isTablet = this.deviceService.isTablet();
+  }
+
+  @Input('categoryMap')
+  set setCategoryMap(categoryMap: Map<Category, number>) {
+    this.selectedCategoryMap = categoryMap;
   }
 
   showTaskBy(category: Category | undefined): void {

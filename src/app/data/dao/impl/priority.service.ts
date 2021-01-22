@@ -7,6 +7,7 @@ import {PrioritySearchValues} from '../search/SearchObjects';
 import {CommonService} from './CommonService';
 
 export const PRIORITY_URL_TOKEN = new InjectionToken<string>('url');
+
 @Injectable({
   providedIn: 'root'
 })

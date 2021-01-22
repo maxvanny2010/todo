@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
-import {DataHandlerService} from '../../services/data-handler.service';
 import {Priority} from '../../model/interfaces';
 
 @Component({
@@ -13,12 +12,11 @@ export class SettingsDialogComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<SettingsDialogComponent>,
-    private dataHandler: DataHandlerService
   ) {
   }
 
   ngOnInit(): void {
-    this.dataHandler.getAllPriorities().subscribe(priorities => this.priorities = priorities);
+    /*  this.dataHandler.getAllPriorities().subscribe(priorities => this.priorities = priorities);*/
   }
 
   onClose(): void {
@@ -26,14 +24,14 @@ export class SettingsDialogComponent implements OnInit {
   }
 
   onAddPriority(priority: Priority): void {
-    this.dataHandler.addPriority(priority).subscribe();
+    /*this.dataHandler.addPriority(priority).subscribe();*/
   }
 
   onUpdatePriority(priority: Priority): void {
-    this.dataHandler.updatePriority(priority).subscribe();
+    /*this.dataHandler.updatePriority(priority).subscribe();*/
   }
 
   onDeletePriority(priority: Priority): void {
-    this.dataHandler.deletePriority(priority.id).subscribe();
+    /* this.dataHandler.deletePriority(priority.id).subscribe();*/
   }
 }

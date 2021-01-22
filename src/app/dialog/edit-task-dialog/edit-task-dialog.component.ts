@@ -1,7 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {Category, Priority, Task} from 'src/app/model/interfaces';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {DataHandlerService} from '../../services/data-handler.service';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 import {OperType} from '../OperType';
 import {DeviceDetectorService} from 'ngx-device-detector';
@@ -31,7 +30,6 @@ export class EditTaskDialogComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<EditTaskDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: [Task, string, OperType],
-    private dataHandler: DataHandlerService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog
   ) {
@@ -47,8 +45,8 @@ export class EditTaskDialogComponent implements OnInit {
     this.tmpCategory = this.task.category;
     this.tmpPriority = this.task.priority;
     this.tmpDate = this.task.date;
-    this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories);
-    this.dataHandler.getAllPriorities().subscribe(priorities => this.priorities = priorities);
+    /*this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories);
+    this.dataHandler.getAllPriorities().subscribe(priorities => this.priorities = priorities);*/
   }
 
   onConfirm(): void {
