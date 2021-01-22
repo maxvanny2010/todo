@@ -3,18 +3,17 @@
               [opened]="menuOpened"
   >
     <div class="sidebar" data-background-color="white" data-color="green">
-      <!--<app-categories
-        (addCategory)="onAddCategory($event)"
-        (deleteCategory)="onDeleteCategory($event)"
-        (searchCategory)="onSearchCategory($event)"
-        (selectCategory)="onSelectCategory($event)"
-        (updateCategory)="onUpdateCategory($event)"
+      <app-categories
+        (addCategory)="addCategory($event)"
+        (deleteCategory)="deleteCategory($event)"
+        (searchCategory)="searchCategory($event)"
+        (selectCategory)="selectCategory($event)"
+        (updateCategory)="updateCategory($event)"
+
         [categories]="categories"
-        [categoryMap]="categoryMap"
-        [searchCategoryTitle]="searchCategoryText"
         [selectedCategory]="selectedCategoryInApp"
-        [uncompletedTotalTask]="uncompletedTotalTasksCount"
-      ></app-categories>-->
+        [uncompletedCountForCategoryAll]="uncompletedCountForCategoryAll"
+      ></app-categories>
     </div>
   </mat-drawer>
   <mat-drawer-content

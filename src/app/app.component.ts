@@ -5,6 +5,7 @@ import {IntroService} from './services/intro.service';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDrawerMode} from '@angular/material/sidenav/drawer';
 import {DatepickerDropdownPositionX} from '@angular/material/datepicker';
+import {CategoryService} from './data/dao/impl/category.service';
 
 @Component({
   selector: 'app-root',
@@ -12,17 +13,9 @@ import {DatepickerDropdownPositionX} from '@angular/material/datepicker';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  categoryMap = new Map<Category, number>();
-  title = 'todo';
-  tasks: Task[] = [];
   categories: Category[] = [];
-  priorities: Priority[] = [];
   selectedCategoryInApp: Category | undefined;
-  searchCategoryText = '';
-  totalTasksCountInCategory: any | undefined;
-  completedCountInCategory: any | undefined;
-  uncompletedCountInCategory: any | undefined;
-  uncompletedTotalTasksCount: any | undefined;
+  uncompletedCountForCategoryAll!: any;
   showStat = true;
   menuOpened = true;
   menuPosition!: DatepickerDropdownPositionX;
@@ -30,11 +23,9 @@ export class AppComponent implements OnInit {
   menuMode!: MatDrawerMode;
   isMobile!: boolean;
   isTablet!: boolean;
-  private searchTaskText = '';
-  private statusFilter!: boolean;
-  private priorityFilter!: Priority;
 
   constructor(
+    private service: CategoryService,
     private introService: IntroService,
     private deviceService: DeviceDetectorService,
   ) {
@@ -47,8 +38,8 @@ export class AppComponent implements OnInit {
     /* this.dataHandler.getAllTasks().subscribe(tasks => this.tasks = tasks);
      this.dataHandler.getAllPriorities().subscribe(categories => this.priorities = categories);
      this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories);*/
-    this.fillCategories();
-    this.onSelectCategory(undefined);
+    this.fillAllCategories();
+    this.selectCategory(undefined);
     if (!this.isMobile && !this.isTablet) {
       this.introService.startIntroJS(true);
     }
@@ -111,29 +102,27 @@ export class AppComponent implements OnInit {
     });*/
   }
 
-  fillCategories(): void {
-    if (this.categoryMap) {
-      this.categoryMap.clear();
-    }
-    this.categories = this.categories.sort((a, b) => a.title.localeCompare(b.title));
+  fillAllCategories(): void {
+    this.service.findAll().subscribe(categories => this.categories = categories);
+    /* this.categories = this.categories.sort((a, b) => a.title.localeCompare(b.title));*/
     /*this.categories.forEach((cat: Category) =>
       this.dataHandler.getUnCompletedCountInCategory(cat).subscribe(count => this.categoryMap.set(cat, count))
     );*/
   }
 
-  onSelectCategory(category: Category | undefined): void {
+  selectCategory(category: Category | undefined): void {
     this.selectedCategoryInApp = category;
     this.updateTasksAndStat();
   }
 
-  onUpdateCategory(category: Category): void {
+  updateCategory(category: Category): void {
     /*this.dataHandler.updateCategory(category)
       .subscribe(() => {
         this.fillCategories();
       });*/
   }
 
-  onDeleteCategory(category: Category): void {
+  deleteCategory(category: Category): void {
     /*this.dataHandler.deleteCategory(category)
       .subscribe((cat) => {
         this.selectedCategoryInApp = undefined;
@@ -144,14 +133,14 @@ export class AppComponent implements OnInit {
       });*/
   }
 
-  onAddCategory(title: string): void {
+  addCategory(title: string): void {
     /* this.dataHandler.addCategory(title).subscribe(() => {
        this.updateCategories();
      });*/
   }
 
-  onSearchCategory(title: string): void {
-    this.searchCategoryText = title;
+  searchCategory(title: string): void {
+    /* this.searchCategoryText = title;*/
     /* this.dataHandler.searchCategories(title).subscribe(categories => {
        this.categories = categories;
        this.fillCategories();
@@ -164,17 +153,17 @@ export class AppComponent implements OnInit {
   }
 
   onSearchTasks(searchString: string): void {
-    this.searchTaskText = searchString;
+    /* this.searchTaskText = searchString;*/
     this.updateTasks();
   }
 
   onFilterTasksByStatus(status: boolean): void {
-    this.statusFilter = status;
+    /* this.statusFilter = status;*/
     this.updateTasks();
   }
 
   onFilterTasksByPriority(priority: Priority): void {
-    this.priorityFilter = priority;
+    /* this.priorityFilter = priority;*/
     this.updateTasks();
 
   }
@@ -218,10 +207,10 @@ export class AppComponent implements OnInit {
        this.dataHandler.getUnCompletedCountInCategory(this.selectedCategoryInApp),
        this.dataHandler.getUnCompletedTotalCount(),*/
     ).subscribe(array => {
-      this.totalTasksCountInCategory = array[0];
+      /*this.totalTasksCountInCategory = array[0];
       this.completedCountInCategory = array[1];
       this.uncompletedCountInCategory = array[2];
-      this.uncompletedTotalTasksCount = array[3];
+      this.uncompletedCountForCategoryAll = array[3];*/
     });
   }
 }

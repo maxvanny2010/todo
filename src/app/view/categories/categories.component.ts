@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Category} from '../../model/interfaces';
 import {EditCategoryDialogComponent} from '../../dialog/edit-category-dialog/edit-category-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {OperType} from '../../dialog/OperType';
 import {DeviceDetectorService} from 'ngx-device-detector';
+import {Category} from '../../model/Category';
 
 @Component({
   selector: 'app-categories',
@@ -11,17 +11,16 @@ import {DeviceDetectorService} from 'ngx-device-detector';
   styleUrls: ['./categories.component.css']
 })
 export class CategoriesComponent {
-  @Input() categories: Category[] = [];
-  @Output() selectCategory: EventEmitter<Category> = new EventEmitter<Category>();
+  categories: Category[] = [];
+  indexMouseMove!: number;
   @Input() selectedCategory: Category | undefined;
-  indexMouseMove: number | undefined;
+  @Input() uncompletedCountForCategoryAll = 0;
+  @Input() searchCategoryTitle = '';
+  @Output() selectCategory: EventEmitter<Category> = new EventEmitter<Category>();
   @Output() deleteCategory: EventEmitter<Category> = new EventEmitter<Category>();
   @Output() updateCategory: EventEmitter<Category> = new EventEmitter<Category>();
   @Output() addCategory: EventEmitter<string> = new EventEmitter<string>();
   @Output() searchCategory: EventEmitter<string> = new EventEmitter<string>();
-  @Input() searchCategoryTitle = '';
-  @Input() uncompletedTotalTask = 0;
-  selectedCategoryMap: Map<Category, number> = new Map<Category, number>();
   isMobile!: boolean;
   isTablet!: boolean;
 
@@ -32,9 +31,9 @@ export class CategoriesComponent {
     this.isTablet = this.deviceService.isTablet();
   }
 
-  @Input('categoryMap')
-  set setCategoryMap(categoryMap: Map<Category, number>) {
-    this.selectedCategoryMap = categoryMap;
+  @Input('categories')
+  set setCategories(categories: Category[]) {
+    this.categories = categories;
   }
 
   showTaskBy(category: Category | undefined): void {
@@ -45,7 +44,7 @@ export class CategoriesComponent {
     this.selectCategory.emit(this.selectedCategory);
   }
 
-  showEditIcon(index: number | undefined): void {
+  showEditIcon(index: number): void {
     this.indexMouseMove = index;
   }
 
