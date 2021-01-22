@@ -1,14 +1,13 @@
 import {Observable} from 'rxjs';
-import {Category} from '../../../model/interfaces';
 
 export interface CommonDAO<T> {
-  getAll(): Observable<Category[]>;
+  findAll(): Observable<T[]>;
 
-  get(id: number): Observable<T | undefined>;
+  findById(id: number): Observable<T>;
 
   update(object: T): Observable<T>;
 
-  delete(id: number): Observable<T | undefined>;
+  delete(id: number): Observable<T>;
 
   add(object: T): Observable<T>;
 
