@@ -1,7 +1,8 @@
-import {Category} from '../../../model/interfaces';
 import {CommonDAO} from './CommonDAO';
 import {Observable} from 'rxjs';
+import {CategorySearchValues} from '../search/SearchObjects';
+import {Category} from '../../../model/Category';
 
 export interface CategoryDAO extends CommonDAO<Category> {
-  search(title: string): Observable<Category[]>;
+  findCategories(categorySearchValues: CategorySearchValues): Observable<any>;
 }
