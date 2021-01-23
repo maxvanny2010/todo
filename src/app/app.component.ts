@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {Category, Priority, Task} from './model/interfaces';
 import {zip} from 'rxjs';
 import {IntroService} from './services/intro.service';
 import {DeviceDetectorService} from 'ngx-device-detector';
@@ -7,6 +6,9 @@ import {MatDrawerMode} from '@angular/material/sidenav/drawer';
 import {DatepickerDropdownPositionX} from '@angular/material/datepicker';
 import {CategoryService} from './data/dao/impl/category.service';
 import {CategorySearchValues} from './data/dao/search/SearchObjects';
+import {Category} from './model/Category';
+import {Priority} from './model/Priority';
+import {Task} from './model/Task';
 
 @Component({
   selector: 'app-root',
@@ -112,32 +114,29 @@ export class AppComponent implements OnInit {
     );*/
   }
 
+  /*Category action*/
   selectCategory(category: Category | undefined): void {
     this.selectedCategoryInApp = category;
     this.updateTasksAndStat();
   }
 
   updateCategory(category: Category): void {
-    /*this.dataHandler.updateCategory(category)
-      .subscribe(() => {
-        this.fillCategories();
-      });*/
+    this.service.update(category).subscribe(() => {
+      this.searchCategory(this.categorySearchValues);
+    });
   }
 
   deleteCategory(category: Category): void {
-    /*this.dataHandler.deleteCategory(category)
-      .subscribe((cat) => {
-        this.selectedCategoryInApp = undefined;
-        /!* this.searchCategoryText = '';*!/
-        this.categoryMap.delete(cat);
-        /!* this.fillCategories();*!/
-        this.updateTasksAndStat();
-      });*/
+    if (category.id != null) {
+      this.service.delete(category.id).subscribe(() => {
+        this.searchCategory(this.categorySearchValues);
+      });
+    }
   }
 
   addCategory(category: Category): void {
     this.service.add(category).subscribe(result => {
-
+        this.searchCategory(this.categorySearchValues);
       }
     );
   }
@@ -146,16 +145,6 @@ export class AppComponent implements OnInit {
     this.service.findCategories(categorySearchValues).subscribe(result => {
       this.categories = result;
     });
-    /* this.searchCategoryText = title;*/
-    /* this.dataHandler.searchCategories(title).subscribe(categories => {
-       this.categories = categories;
-       this.fillCategories();
-       if (title === '') {
-         this.selectedCategoryInApp = undefined;
-         this.searchCategoryText = '';
-         this.updateTasksAndStat();
-       }
-     });*/
   }
 
   onSearchTasks(searchString: string): void {

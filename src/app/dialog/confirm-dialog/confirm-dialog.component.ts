@@ -1,5 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {DialogAction, DialogResult} from '../../action/DialogResult';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -18,11 +19,11 @@ export class ConfirmDialogComponent {
     this.message = data.message;
   }
 
-  onConfirm(): void {
-    this.dialogRef.close(true);
+  confirm(): void {
+    this.dialogRef.close(new DialogResult(DialogAction.OK));
   }
 
-  onCancel(): void {
-    this.dialogRef.close(false);
+  cancel(): void {
+    this.dialogRef.close(new DialogResult(DialogAction.CANCEL));
   }
 }

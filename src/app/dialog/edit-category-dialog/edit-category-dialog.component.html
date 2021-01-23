@@ -2,16 +2,13 @@
   <p mat-dialog-title>{{dialogTitle}}</p>
   <mat-form-field>
     <mat-label>Название (15 символов)</mat-label>
-    <input #inputTitle
-           (keydown.enter)="onConfirm()"
-           [(ngModel)]="categoryTitle"
+    <input #inputTitle (keydown.enter)="confirm()" [(ngModel)]="category.title"
            matInput
            maxlength="15"
     />
 
-    <button (click)="categoryTitle= ''" *ngIf="categoryTitle.trim().length > 0" aria-label="Clear"
-            class="clear-icon size25"
-            mat-button
+    <button (click)="category.title= ''" *ngIf="category.title.trim().length > 0" aria-label="Clear"
+            class="clear-icon" mat-button
             mat-icon-button
             matSuffix
     >
@@ -25,8 +22,7 @@
        class="col-12 text-center"
   >
     <div class="d-inline">
-      <button (click)="onConfirm()" [disabled]="inputTitle.value.trim().length == 0"
-              color="primary"
+      <button (click)="confirm()" [disabled]="inputTitle.value.trim().length == 0" color="primary"
               mat-raised-button
               style="background: #43a047 !important;"
       >
@@ -34,7 +30,7 @@
       </button>
     </div>
     <div class="d-inline ml-2">
-      <button (click)="onCancel()"
+      <button (click)="cancel()"
               mat-raised-button
       >
         Отмена
@@ -45,12 +41,12 @@
          [class.ml-2]="isMobile"
          class="text-center"
     >
-      <button (click)="onDelete()" *ngIf="canDelete()"
+      <button (click)="delete()" *ngIf="canDelete"
               [class.mat-raised-button]="isMobile"
               class="red"
-              mat-button
+              mat-button mat-icon-button
       >
-        Удалить
+        <mat-icon>delete</mat-icon>
       </button>
     </div>
   </div>

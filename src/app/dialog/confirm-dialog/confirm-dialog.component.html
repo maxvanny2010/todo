@@ -3,9 +3,10 @@
   <p>{{message}}</p>
 </div>
 <div mat-dialog-actions>
-  <button (click)="onConfirm()" color="primary"
+  <button (click)="confirm()" color="primary"
           mat-raised-button
-          style="background: #43a047 !important;">Oк
+          style="background: #43a047 !important;"
+  >Oк
   </button>
-  <button (click)="onCancel()" mat-button>Отмена</button>
+  <button (click)="cancel()" mat-button>Отмена</button>
 </div>

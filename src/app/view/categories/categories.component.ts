@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {EditCategoryDialogComponent} from '../../dialog/edit-category-dialog/edit-category-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
-import {OperType} from '../../dialog/OperType';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {Category} from '../../model/Category';
 import {CategorySearchValues} from '../../data/dao/search/SearchObjects';
+import {DialogAction} from '../../action/DialogResult';
 
 @Component({
   selector: 'app-categories',
@@ -68,27 +68,37 @@ export class CategoriesComponent {
 
   openEditDialog(category: Category): void {
     const dialogRef = this.dialog.open(EditCategoryDialogComponent, {
-      maxWidth: '400px',
-      data: [category.title, 'Редактирование категории', OperType.EDIT]
+      data: [new Category(category.id, category.title),
+        'Редактирование категории'], width: '400px'
     });
     dialogRef.afterClosed()
       .subscribe(result => {
-        if (result === 'delete') {
+        if (!result) {
+          return;
+        }
+        if (result.action === DialogAction.DELETE) {
           this.deleteCategory.emit(category);
-        } else if (result as string) {
-          category.title = result as string;
-          this.updateCategory.emit(category);
+          return;
+        }
+
+        if (result.action === DialogAction.SAVE) {
+          this.updateCategory.emit(result.obj as Category);
+          return;
         }
       });
   }
 
   openAddDialog(): void {
     const dialogRef = this.dialog.open(EditCategoryDialogComponent, {
-      data: ['', 'Добавление категории', OperType.ADD], width: '400px'
+      data: [new Category(null, ''), 'Добавление категории'],
+      width: '400px'
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.addCategory.emit(result);
+      if (!result) {
+        return;
+      }
+      if (result.action === DialogAction.SAVE) {
+        this.addCategory.emit(result.obj as Category);
       }
     });
   }
