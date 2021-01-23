@@ -58,7 +58,7 @@ export class CategoriesComponent {
     this.uncompletedCountForCategoryAll = uncompletedCountForCategoryAll;
   }
 
-  showTaskBy(category: Category | undefined): void {
+  showTaskBy(category: Category): void {
     if (this.selectedCategory === category) {
       return;
     }
@@ -120,8 +120,12 @@ export class CategoriesComponent {
 
   }
 
-  showCategory(category: Category): void {
-
+  showCategory(category: Category | undefined): void {
+    if (this.selectedCategory === category) {
+      return;
+    }
+    this.selectedCategory = category;
+    this.selectCategory.emit(this.selectedCategory);
   }
 
   showEditIcon(show: boolean, index: number): void {

@@ -5,10 +5,11 @@ import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDrawerMode} from '@angular/material/sidenav/drawer';
 import {DatepickerDropdownPositionX} from '@angular/material/datepicker';
 import {CategoryService} from './data/dao/impl/category.service';
-import {CategorySearchValues} from './data/dao/search/SearchObjects';
+import {CategorySearchValues, TaskSearchValues} from './data/dao/search/SearchObjects';
 import {Category} from './model/Category';
 import {Priority} from './model/Priority';
 import {Task} from './model/Task';
+import {TaskService} from './data/dao/impl/task.service';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,8 @@ import {Task} from './model/Task';
 })
 export class AppComponent implements OnInit {
   categories: Category[] = [];
-  selectedCategoryInApp: Category | undefined;
+  tasks: Task[] = [];
+  selectedCategoryInApp!: Category | undefined;
   uncompletedCountForCategoryAll!: any;
   showStat = true;
   menuOpened = true;
@@ -27,9 +29,11 @@ export class AppComponent implements OnInit {
   isMobile!: boolean;
   isTablet!: boolean;
   categorySearchValues = new CategorySearchValues();
+  taskSearchValue = new TaskSearchValues();
 
   constructor(
-    private service: CategoryService,
+    private categoryService: CategoryService,
+    private taskService: TaskService,
     private introService: IntroService,
     private deviceService: DeviceDetectorService,
   ) {
@@ -107,49 +111,52 @@ export class AppComponent implements OnInit {
   }
 
   fillAllCategories(): void {
-    this.service.findAll().subscribe(categories => this.categories = categories);
-    /* this.categories = this.categories.sort((a, b) => a.title.localeCompare(b.title));*/
-    /*this.categories.forEach((cat: Category) =>
-      this.dataHandler.getUnCompletedCountInCategory(cat).subscribe(count => this.categoryMap.set(cat, count))
-    );*/
+    this.categoryService.findAll().subscribe(categories => this.categories = categories);
   }
 
   /*Category action*/
   selectCategory(category: Category | undefined): void {
     this.selectedCategoryInApp = category;
-    this.updateTasksAndStat();
+    this.taskSearchValue.categoryId = category ? category.id : null;
+    this.searchTasks(this.taskSearchValue);
+    if (this.isMobile) {
+      this.menuOpened = false;
+    }
   }
 
   updateCategory(category: Category): void {
-    this.service.update(category).subscribe(() => {
+    this.categoryService.update(category).subscribe(() => {
       this.searchCategory(this.categorySearchValues);
     });
   }
 
   deleteCategory(category: Category): void {
     if (category.id != null) {
-      this.service.delete(category.id).subscribe(() => {
+      this.categoryService.delete(category.id).subscribe(() => {
         this.searchCategory(this.categorySearchValues);
       });
     }
   }
 
   addCategory(category: Category): void {
-    this.service.add(category).subscribe(result => {
+    this.categoryService.add(category).subscribe(result => {
         this.searchCategory(this.categorySearchValues);
       }
     );
   }
 
   searchCategory(categorySearchValues: CategorySearchValues): void {
-    this.service.findCategories(categorySearchValues).subscribe(result => {
+    this.categoryService.findCategories(categorySearchValues).subscribe(result => {
       this.categories = result;
     });
   }
 
-  onSearchTasks(searchString: string): void {
-    /* this.searchTaskText = searchString;*/
-    this.updateTasks();
+  searchTasks(taskSearchValues: TaskSearchValues): void {
+    this.taskSearchValue = taskSearchValues;
+    this.taskService.findTasks(this.taskSearchValue)
+      .subscribe(task => {
+        this.tasks = task.content;
+      });
   }
 
   onFilterTasksByStatus(status: boolean): void {

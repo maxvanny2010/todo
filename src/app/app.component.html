@@ -59,19 +59,12 @@
                  data-scrollTo="tooltip"
                  data-step="8"
             >
-              <!--   <app-tasks
-                   (addTask)="onAddTask($event)"
-                   (deleteTask)="onDeleteTask($event)"
-                   (filterByPriority)="onFilterTasksByPriority($event)"
-                   (filterByStatus)="onFilterTasksByStatus($event)"
-                   (filterByTitle)="onSearchTasks($event)"
-                   (selectCategory)="onSelectCategory($event)"
-                   (updateTask)="onUpdateTask($event)"
-                   [priorities]="priorities"
-                   [selectedCategory]="selectedCategoryInApp"
-                   [tasks]="tasks"
-                 >
-                 </app-tasks>-->
+              <app-tasks
+
+                [selectedCategory]="selectedCategoryInApp"
+                [tasks]="tasks"
+              >
+              </app-tasks>
             </div>
           </div>
         </div>
@@ -101,4 +94,14 @@
                 </p>
               </a>
             </li>
+-->
+<!--
+ (addTask)="onAddTask($event)"
+                   (deleteTask)="onDeleteTask($event)"
+                   (filterByPriority)="onFilterTasksByPriority($event)"
+                   (filterByStatus)="onFilterTasksByStatus($event)"
+                   (filterByTitle)="onSearchTasks($event)"
+                   (updateTask)="onUpdateTask($event)"
+                   [priorities]="priorities"
+                   [selectedCategory]="selectedCategoryInApp"
 -->

@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {Category, Priority, Task} from '../../model/interfaces';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
@@ -9,6 +8,9 @@ import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog.component';
 import {OperType} from '../../dialog/OperType';
 import {DeviceDetectorService} from 'ngx-device-detector';
+import {Priority} from '../../model/Priority';
+import {Task} from 'src/app/model/Task';
+import {Category} from '../../model/Category';
 
 @Component({
   selector: 'app-tasks',
@@ -29,9 +31,9 @@ export class TasksComponent implements OnInit {
   @Output() filterByTitle: EventEmitter<string> = new EventEmitter<string>();
   @Output() filterByStatus: EventEmitter<any> = new EventEmitter<any>();
   @Output() filterByPriority: EventEmitter<Priority> = new EventEmitter<Priority>();
-  // поиск
-  searchTaskText = ''; // текущее значение для поиска задач
-  selectedStatusFilter: any = null;   // по-умолчанию будут показываться задачи по всем статусам (решенные и нерешенные)
+  // search
+  searchTaskText = ''; // current text for search tasks
+  selectedStatusFilter: any = null;   // by default to show task by all status
   selectPriorityFilter: any = null;
   @Input() selectedCategory: Category | undefined;
   isMobile!: boolean;

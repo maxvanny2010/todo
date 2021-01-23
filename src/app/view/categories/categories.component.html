@@ -47,7 +47,8 @@
         >
           <mat-icon>clear</mat-icon>
         </button>
-        <button (click)="search()" *ngIf="filterTitle && filterTitle.trim().length > 0" [ngClass]="{'blink-button':filterChanged}"
+        <button (click)="search()" *ngIf="filterTitle && filterTitle.trim().length > 0"
+                [ngClass]="{'blink-button':filterChanged}"
                 mat-button
                 mat-icon-button
                 matSuffix
@@ -56,8 +57,10 @@
         </button>
       </mat-form-field>
     </div>
-    <li [class.active]="selectedCategory === undefined"
+    <li (click)="showCategory(undefined)"
+        [class.active]="selectedCategory === undefined"
         class="nav-item category"
+
     >
       <a class="nav-link pointer">
           <span class="all-category-title">

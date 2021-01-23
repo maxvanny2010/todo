@@ -19,7 +19,7 @@ export class TaskService extends CommonService<Task> implements TaskDAO {
     super(baseUrl, http);
   }
 
-  findTasks(taskSearchValues: TaskSearchValues): Observable<Task[]> {
+  findTasks(taskSearchValues: TaskSearchValues): Observable<any> {
     return this.http.post<Task[]>(this.baseUrl + '/search', taskSearchValues);
   }
 
