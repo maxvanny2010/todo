@@ -6,6 +6,7 @@ import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDrawerMode} from '@angular/material/sidenav/drawer';
 import {DatepickerDropdownPositionX} from '@angular/material/datepicker';
 import {CategoryService} from './data/dao/impl/category.service';
+import {CategorySearchValues} from './data/dao/search/SearchObjects';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +24,7 @@ export class AppComponent implements OnInit {
   menuMode!: MatDrawerMode;
   isMobile!: boolean;
   isTablet!: boolean;
+  categorySearchValues = new CategorySearchValues();
 
   constructor(
     private service: CategoryService,
@@ -133,13 +135,17 @@ export class AppComponent implements OnInit {
       });*/
   }
 
-  addCategory(title: string): void {
-    /* this.dataHandler.addCategory(title).subscribe(() => {
-       this.updateCategories();
-     });*/
+  addCategory(category: Category): void {
+    this.service.add(category).subscribe(result => {
+
+      }
+    );
   }
 
-  searchCategory(title: string): void {
+  searchCategory(categorySearchValues: CategorySearchValues): void {
+    this.service.findCategories(categorySearchValues).subscribe(result => {
+      this.categories = result;
+    });
     /* this.searchCategoryText = title;*/
     /* this.dataHandler.searchCategories(title).subscribe(categories => {
        this.categories = categories;

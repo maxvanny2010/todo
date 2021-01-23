@@ -32,7 +32,7 @@
 }
 
 span.add-icon-area {
-  width: 15%;
+  width: 20%;
   display: inline-block;
   text-align: left;
 }
@@ -43,7 +43,7 @@ span.add-icon-area {
 }
 
 .nav-title {
-  width: 85%;
+  width: 80%;
   display: inline-block;
   font-size: 20px;
   text-align: center;
@@ -82,10 +82,43 @@ span.add-icon-area {
   box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.2);
 }
 
+.uncompleted-count {
+  background-color: #eaeaea;
+  border-radius: 3px;
+  padding: 5px;
+  color: black;
+  width: 15%;
+  display: inline-block;
+  text-align: center;
+}
+
 .uncompleted-color {
   color: #8a8a8a !important;
 }
 
 .completed-color {
   color: #eaeaea !important;
+}
+
+.title, .category {
+  cursor: pointer;
+}
+
+.sidebar-wrapper .mat-form-field {
+  padding-bottom: 0px;
+}
+
+
+.sidebar a {
+  font-size: 16px !important;
+}
+
+.color-circle {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 30px;
+  border: 1px solid #dadada;
+
 }

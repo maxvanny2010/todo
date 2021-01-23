@@ -19,6 +19,7 @@ export class CategoryService extends CommonService<Category> implements Category
   }
 
   findCategories(categorySearchValues: CategorySearchValues): Observable<Category[]> {
+    /*to sent by object with fields, not simple field*/
     return this.http.post<Category[]>(this.baseUrl + '/search', categorySearchValues);
   }
 }

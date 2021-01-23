@@ -33,52 +33,57 @@
   <ul class="nav">
     <div class="search-category-area">
       <mat-form-field class="example-full-width">
-        <input #inputSearchCategory (keydown.escape)="searchCategoryTitle = ''; search()"
-               (keyup)="search()"
-               [(ngModel)]="searchCategoryTitle"
+        <input (keydown.escape)="clearAndSearch()" (ngModelChange)="this.checkFilterChanged()"
+               [(ngModel)]="filterTitle"
                matInput
                maxlength="256"
                placeholder="Поиск категорий"
         >
-        <button (click)="searchCategoryTitle = ''; search()" *ngIf="inputSearchCategory.value.trim().length > 0"
-                aria-label="Clear"
-                class="search-category-button size25 gray"
-                mat-button mat-icon-button
+        <button (click)="clearAndSearch()" *ngIf="filterTitle && filterTitle.trim().length > 0" aria-label="Clear"
+                class="search-category-button"
+                mat-button
+                mat-icon-button
                 matSuffix
         >
           <mat-icon>clear</mat-icon>
         </button>
+        <button (click)="search()" *ngIf="filterTitle && filterTitle.trim().length > 0" [ngClass]="{'blink-button':filterChanged}"
+                mat-button
+                mat-icon-button
+                matSuffix
+        >
+          <mat-icon>search</mat-icon>
+        </button>
       </mat-form-field>
     </div>
-    <li (click)="showTaskBy(undefined)"
-        [class.active]="selectedCategory === undefined"
+    <li [class.active]="selectedCategory === undefined"
         class="nav-item category"
     >
       <a class="nav-link pointer">
           <span class="all-category-title">
             Все категории
           </span>
-        <span class="uncompleted-count">{{uncompletedCountForCategoryAll}}</span>
+        <span class="uncompleted-count">{{uncompletedCountForCategoryAll || 0}}</span>
       </a>
     </li>
     <div class="line"></div>
     <div *ngIf="!categories || categories.length === 0"><p class="not-found">Ничего не найдено</p></div>
-    <li (click)="showTaskBy(category)"
-        (mouseenter)="showEditIcon(idx)"
-        (mouseleave)="showEditIcon(idx)"
+    <li (click)="showCategory(category)"
+        (mouseenter)="showEditIcon(true,idx)"
+        (mouseleave)="showEditIcon(false, idx)"
         *ngFor="let category of categories; let idx = index"
-        [class.active]="category === selectedCategory"
+        [class.active]="(selectedCategory && category) && category.id === selectedCategory.id"
         [ngClass]="category !== selectedCategory?'uncompleted-color':'completed-color'"
         class="nav-item pointer"
+
     >
 
       <a class="nav-link">
         <span class="category-title">{{category.title}}</span>
         <span class="edit-category-icon-area">
-            <mat-icon
-              (click)="$event.stopPropagation(); openEditDialog(category)"
-              *ngIf="indexMouseMove === idx || (isMobile || isTablet)"
-              class="edit-category-icon"
+            <mat-icon (click)="$event.stopPropagation(); openEditDialog(category)"
+                      *ngIf="(showEditIconCategory && idx === indexMouseMove) || (isMobile || isTablet)"
+                      class="edit-category-icon"
             >
               edit
             </mat-icon>

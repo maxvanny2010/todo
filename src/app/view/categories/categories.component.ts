@@ -4,6 +4,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {OperType} from '../../dialog/OperType';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {Category} from '../../model/Category';
+import {CategorySearchValues} from '../../data/dao/search/SearchObjects';
 
 @Component({
   selector: 'app-categories',
@@ -12,15 +13,19 @@ import {Category} from '../../model/Category';
 })
 export class CategoriesComponent {
   categories: Category[] = [];
+  filterTitle!: string | null;
+  filterChanged!: boolean;
   indexMouseMove!: number;
-  @Input() selectedCategory: Category | undefined;
-  @Input() uncompletedCountForCategoryAll = 0;
-  @Input() searchCategoryTitle = '';
+  showEditIconCategory!: boolean;
+  categorySearchValues!: CategorySearchValues;
+  uncompletedCountForCategoryAll!: number;
+  selectedCategory!: Category | undefined;
+  /*@Output*/
   @Output() selectCategory: EventEmitter<Category> = new EventEmitter<Category>();
   @Output() deleteCategory: EventEmitter<Category> = new EventEmitter<Category>();
   @Output() updateCategory: EventEmitter<Category> = new EventEmitter<Category>();
-  @Output() addCategory: EventEmitter<string> = new EventEmitter<string>();
-  @Output() searchCategory: EventEmitter<string> = new EventEmitter<string>();
+  @Output() addCategory: EventEmitter<Category> = new EventEmitter<Category>();
+  @Output() searchCategory: EventEmitter<CategorySearchValues> = new EventEmitter<CategorySearchValues>();
   isMobile!: boolean;
   isTablet!: boolean;
 
@@ -31,9 +36,26 @@ export class CategoriesComponent {
     this.isTablet = this.deviceService.isTablet();
   }
 
+  /*@Input*/
+  @Input('selectedCategory')
+  set setCategory(selectedCategory: Category | undefined) {
+    this.selectedCategory = selectedCategory;
+  }
+
   @Input('categories')
   set setCategories(categories: Category[]) {
-    this.categories = categories;
+    this.categories = categories; // категории для отображения
+  }
+
+  @Input('categorySearchValues')
+  set setCategorySearchValues(categorySearchValues: CategorySearchValues) {
+    this.categorySearchValues = categorySearchValues;
+  }
+
+  // используется для категории Все
+  @Input('uncompletedCountForCategoryAll')
+  set uncompletedCount(uncompletedCountForCategoryAll: number) {
+    this.uncompletedCountForCategoryAll = uncompletedCountForCategoryAll;
   }
 
   showTaskBy(category: Category | undefined): void {
@@ -42,10 +64,6 @@ export class CategoriesComponent {
     }
     this.selectedCategory = category;
     this.selectCategory.emit(this.selectedCategory);
-  }
-
-  showEditIcon(index: number): void {
-    this.indexMouseMove = index;
   }
 
   openEditDialog(category: Category): void {
@@ -70,15 +88,39 @@ export class CategoriesComponent {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.addCategory.emit(result as string);
+        this.addCategory.emit(result);
       }
     });
   }
 
   search(): void {
-    if (this.searchCategoryTitle == null) {
+    /*reset*/
+    this.filterChanged = false;
+    /*if object for search not empty*/
+    if (!this.categorySearchValues) {
       return;
     }
-    this.searchCategory.emit(this.searchCategoryTitle);
+    this.categorySearchValues.title = this.filterTitle;
+    this.searchCategory.emit(this.categorySearchValues);
+  }
+
+  checkFilterChanged(): boolean {
+    this.filterChanged = this.filterTitle !== this.categorySearchValues.title;
+    return this.filterChanged;
+
+  }
+
+  showCategory(category: Category): void {
+
+  }
+
+  showEditIcon(show: boolean, index: number): void {
+    this.indexMouseMove = index;
+    this.showEditIconCategory = show;
+  }
+
+  clearAndSearch(): void {
+    this.filterTitle = null;
+    this.search();
   }
 }
