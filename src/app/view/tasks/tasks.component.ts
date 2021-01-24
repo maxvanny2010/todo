@@ -198,7 +198,7 @@ export class TasksComponent implements OnInit {
   }
 
   onToggleCompleted(task: Task): void {
-
+    task.completed = !task.completed;
   }
 
   private addTableObjects(): void {
