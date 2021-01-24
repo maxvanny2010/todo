@@ -32,20 +32,31 @@ export class TasksComponent implements OnInit {
   @Output() selectCategory: EventEmitter<Category> = new EventEmitter<Category>();
   @Output() paging: EventEmitter<PageEvent> = new EventEmitter<PageEvent>(); // переход по страницам данных
   @Output() searchAction = new EventEmitter<TaskSearchValues>();
+  @Output() toggleSearch = new EventEmitter<boolean>(); // показать/скрыть поиск
   @Output() filterByTitle: EventEmitter<string> = new EventEmitter<string>();
   @Output() filterByStatus: EventEmitter<any> = new EventEmitter<any>();
   @Output() filterByPriority: EventEmitter<Priority> = new EventEmitter<Priority>();
 
   // search
-  searchTaskText = ''; // current text for search tasks
-  selectedStatusFilter: any = null;   // by default to show task by all status
-  selectPriorityFilter: any = null;
-  @Input() totalTasksFounded!: number; // сколько всего задач найдено
-  @Input() selectedCategory: Category | undefined;
-  isMobile!: boolean;
-  isTablet!: boolean;
+  filterTitle!: string;
+  filterCompleted!: number | null;
+  filterPriorityId!: number | null;
+  filterSortColumn!: string;
+  filterSortDirection!: string;
+  sortIconName!: string; // иконка сортировки (убывание, возрастание)
+  // названия иконок из коллекции
+  readonly iconNameDown = 'arrow_downward';
+  readonly iconNameUp = 'arrow_upward';
   readonly colorCompletedTask = '#F8F9FA';
   readonly colorWhite = '#fff';
+  readonly defaultSortColumn = 'title';
+  readonly defaultSortDirection = 'asc';
+  @Input() totalTasksFounded!: number; // сколько всего задач найдено
+  @Input() selectedCategory: Category | undefined;
+  @Input() showSearch!: boolean;
+  isMobile!: boolean;
+  isTablet!: boolean;
+  changed = false;
   @ViewChild(MatPaginator, {static: false}) private paginator!: MatPaginator;
   @ViewChild(MatSort, {static: false}) private sort!: MatSort;
 
@@ -68,6 +79,8 @@ export class TasksComponent implements OnInit {
   @Input('taskSearchValues')
   set setTaskSearchValues(taskSearchValues: TaskSearchValues) {
     this.taskSearchValues = taskSearchValues;
+    this.initSearchValues();
+    this.initSortDirectionIcon();
   }
 
   @Input('priorities')
@@ -101,47 +114,96 @@ export class TasksComponent implements OnInit {
     return this.colorWhite;
   }
 
+  initSearch(): void {
+    // сохраняем значения перед поиском
+    this.taskSearchValues.title = this.filterTitle;
+    this.taskSearchValues.completed = this.filterCompleted;
+    this.taskSearchValues.priorityId = this.filterPriorityId;
+    this.taskSearchValues.sortColumn = this.filterSortColumn;
+    this.taskSearchValues.sortDirection = this.filterSortDirection;
+
+    this.searchAction.emit(this.taskSearchValues);
+    this.changed = false; // сбрасываем флаг изменения
+  }
+
+  checkFilterChanged(): boolean {
+    this.changed = false;
+    // поочередно проверяем все фильтры (текущее введенное значение с последним сохраненным)
+    if (this.taskSearchValues.title !== this.filterTitle) {
+      this.changed = true;
+    }
+
+    if (this.taskSearchValues.completed !== this.filterCompleted) {
+      this.changed = true;
+    }
+
+    if (this.taskSearchValues.priorityId !== this.filterPriorityId) {
+      this.changed = true;
+    }
+
+    if (this.taskSearchValues.sortColumn !== this.filterSortColumn) {
+      this.changed = true;
+    }
+
+    if (this.taskSearchValues.sortDirection !== this.filterSortDirection) {
+      this.changed = true;
+    }
+    return this.changed;
+  }
+
+// выбрать правильную иконку (убывание, возрастание)
+  initSortDirectionIcon(): void {
+    if (this.filterSortDirection === 'desc') {
+      this.sortIconName = this.iconNameDown;
+    } else {
+      this.sortIconName = this.iconNameUp;
+    }
+  }
+
+// изменили направление сортировки
+  changedSortDirection(): void {
+    if (this.filterSortDirection === 'asc') {
+      this.filterSortDirection = 'desc';
+    } else {
+      this.filterSortDirection = 'asc';
+    }
+    this.initSortDirectionIcon(); // применяем правильную иконку
+  }
+
+// проинициализировать локальные переменные поиска
+  initSearchValues(): void {
+    if (!this.taskSearchValues) {
+      return;
+    }
+    this.filterTitle = this.taskSearchValues.title;
+    this.filterCompleted = this.taskSearchValues.completed;
+    this.filterPriorityId = this.taskSearchValues.priorityId;
+    this.filterSortColumn = this.taskSearchValues.sortColumn;
+    this.filterSortDirection = this.taskSearchValues.sortDirection;
+  }
+
+  // сбросить локальные переменные поиска
+  clearSearchValues(): void {
+    this.filterTitle = '';
+    this.filterCompleted = null;
+    this.filterPriorityId = null;
+    this.filterSortColumn = this.defaultSortColumn;
+    this.filterSortDirection = this.defaultSortDirection;
+  }
+
+  // показать/скрыть инструменты поиска
+  onToggleSearch(): void {
+    this.toggleSearch.emit(!this.showSearch);
+  }
+
   onSelectCategory(category: Category | undefined): void {
     this.selectCategory.emit(category);
-  }
-
-  onFilterByTitle(): void {
-    this.filterByTitle.emit(this.searchTaskText);
-  }
-
-  onFilterByStatus(value: any): void {
-    if (value !== this.selectedStatusFilter) {
-      this.selectedStatusFilter = value;
-      this.filterByStatus.emit(this.selectedStatusFilter);
-    }
-  }
-
-  onFilterByPriority(value: any): void {
-    if (value !== this.selectPriorityFilter) {
-      this.selectPriorityFilter = value;
-      this.filterByPriority.emit(this.selectPriorityFilter);
-    }
   }
 
   openEditDialog(task: Task): void {
     const dialogRef = this.dialog.open(EditTaskDialogComponent,
       {data: [task, 'Редактирование задачи', OperType.EDIT], autoFocus: false});
     dialogRef.afterClosed().subscribe(result => {
-      if (result === 'delete') {
-        this.deleteTask.emit(task);
-        return;
-      } else if (result === 'active') {
-        task.completed = false;
-        this.updateTask.emit(task);
-        return;
-      } else if (result === 'complete') {
-        task.completed = true;
-        this.updateTask.emit(task);
-        return;
-      } else if (result as Task) {
-        this.updateTask.emit(task);
-        return;
-      }
     });
   }
 
@@ -164,7 +226,7 @@ export class TasksComponent implements OnInit {
     const task: Task = {
       id: 0,
       title: '',
-      completed: false,
+      completed: 0,
       priority: undefined,
       category: this.selectedCategory
     };
@@ -198,7 +260,7 @@ export class TasksComponent implements OnInit {
   }
 
   onToggleCompleted(task: Task): void {
-    task.completed = !task.completed;
+    task.completed = task.completed === 0 ? 0 : 1;
   }
 
   private addTableObjects(): void {
