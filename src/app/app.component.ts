@@ -10,6 +10,8 @@ import {Category} from './model/Category';
 import {Priority} from './model/Priority';
 import {Task} from './model/Task';
 import {TaskService} from './data/dao/impl/task.service';
+import {MatDialog} from '@angular/material/dialog';
+import {PageEvent} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-root',
@@ -29,13 +31,18 @@ export class AppComponent implements OnInit {
   isMobile!: boolean;
   isTablet!: boolean;
   categorySearchValues = new CategorySearchValues();
-  taskSearchValue = new TaskSearchValues();
+  taskSearchValues = new TaskSearchValues();
+  totalTasksFounded!: number;
+  readonly defaultPageSize = 5;
+  readonly defaultPageNumber = 0;
+
 
   constructor(
     private categoryService: CategoryService,
     private taskService: TaskService,
     private introService: IntroService,
     private deviceService: DeviceDetectorService,
+    private dialog: MatDialog,
   ) {
     this.isMobile = this.deviceService.isMobile();
     this.isTablet = this.deviceService.isTablet();
@@ -117,8 +124,8 @@ export class AppComponent implements OnInit {
   /*Category action*/
   selectCategory(category: Category | undefined): void {
     this.selectedCategoryInApp = category;
-    this.taskSearchValue.categoryId = category ? category.id : null;
-    this.searchTasks(this.taskSearchValue);
+    this.taskSearchValues.categoryId = category ? category.id : null;
+    this.searchTasks(this.taskSearchValues);
     if (this.isMobile) {
       this.menuOpened = false;
     }
@@ -151,14 +158,6 @@ export class AppComponent implements OnInit {
     });
   }
 
-  searchTasks(taskSearchValues: TaskSearchValues): void {
-    this.taskSearchValue = taskSearchValues;
-    this.taskService.findTasks(this.taskSearchValue)
-      .subscribe(task => {
-        this.tasks = task.content;
-      });
-  }
-
   onFilterTasksByStatus(status: boolean): void {
     /* this.statusFilter = status;*/
     this.updateTasks();
@@ -181,6 +180,28 @@ export class AppComponent implements OnInit {
 
   toggleMenu(): void {
     this.menuOpened = !this.menuOpened;
+  }
+
+  paging(pageEvent: PageEvent): void {
+    // если изменили настройку "кол-во на странице" - заново делаем запрос и показываем с 1й страницы
+    if (this.taskSearchValues.pageSize !== pageEvent.pageSize) {
+      this.taskSearchValues.pageNumber = 0; // новые данные будем показывать с 1-й страницы (индекс 0)
+    } else {
+      // если просто перешли на другую страницу
+      this.taskSearchValues.pageNumber = pageEvent.pageIndex;
+    }
+    this.taskSearchValues.pageSize = pageEvent.pageSize;
+    this.taskSearchValues.pageNumber = pageEvent.pageIndex;
+    this.searchTasks(this.taskSearchValues); // показываем новые данные
+  }
+
+  searchTasks(taskSearchValues: TaskSearchValues): void {
+    this.taskSearchValues = taskSearchValues;
+    this.taskService.findTasks(this.taskSearchValues)
+      .subscribe(task => {
+        this.totalTasksFounded = task.totalElements;
+        this.tasks = task.content;
+      });
   }
 
   private updateTasks(): void {

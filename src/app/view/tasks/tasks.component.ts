@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
-import {MatPaginator} from '@angular/material/paginator';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {EditTaskDialogComponent} from '../../dialog/edit-task-dialog/edit-task-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
@@ -11,6 +11,7 @@ import {DeviceDetectorService} from 'ngx-device-detector';
 import {Priority} from '../../model/Priority';
 import {Task} from 'src/app/model/Task';
 import {Category} from '../../model/Category';
+import {TaskSearchValues} from '../../data/dao/search/SearchObjects';
 
 @Component({
   selector: 'app-tasks',
@@ -21,23 +22,30 @@ export class TasksComponent implements OnInit {
   // to set values only in html in base page in <app-tasks [tasks]="tasks">
   tasks: Task[] = [];
   priorities: Priority[] = [];
+  taskSearchValues!: TaskSearchValues;
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category', 'operations', 'select'];
   /*container for table data from tasks[] ps. it can be db or any data source*/
   dataSource: MatTableDataSource<Task> = new MatTableDataSource<Task>();
-  @Output() updateTask: EventEmitter<Task> = new EventEmitter<Task>();
-  @Output() deleteTask: EventEmitter<Task> = new EventEmitter<Task>();
   @Output() addTask: EventEmitter<Task> = new EventEmitter<Task>();
+  @Output() deleteTask: EventEmitter<Task> = new EventEmitter<Task>();
+  @Output() updateTask: EventEmitter<Task> = new EventEmitter<Task>();
   @Output() selectCategory: EventEmitter<Category> = new EventEmitter<Category>();
+  @Output() paging: EventEmitter<PageEvent> = new EventEmitter<PageEvent>(); // переход по страницам данных
+  @Output() searchAction = new EventEmitter<TaskSearchValues>();
   @Output() filterByTitle: EventEmitter<string> = new EventEmitter<string>();
   @Output() filterByStatus: EventEmitter<any> = new EventEmitter<any>();
   @Output() filterByPriority: EventEmitter<Priority> = new EventEmitter<Priority>();
+
   // search
   searchTaskText = ''; // current text for search tasks
   selectedStatusFilter: any = null;   // by default to show task by all status
   selectPriorityFilter: any = null;
+  @Input() totalTasksFounded!: number; // сколько всего задач найдено
   @Input() selectedCategory: Category | undefined;
   isMobile!: boolean;
   isTablet!: boolean;
+  readonly colorCompletedTask = '#F8F9FA';
+  readonly colorWhite = '#fff';
   @ViewChild(MatPaginator, {static: false}) private paginator!: MatPaginator;
   @ViewChild(MatSort, {static: false}) private sort!: MatSort;
 
@@ -49,10 +57,17 @@ export class TasksComponent implements OnInit {
     this.isTablet = this.deviceService.isTablet();
   }
 
+  // задачи для отображения на странице
   @Input('tasks')
   set setTasks(tasks: Task[]) {
     this.tasks = tasks;
-    this.fillTable();
+    this.assignTableSource();   // передать данные таблице для отображения задач
+  }
+
+  // все возможные параметры для поиска задач
+  @Input('taskSearchValues')
+  set setTaskSearchValues(taskSearchValues: TaskSearchValues) {
+    this.taskSearchValues = taskSearchValues;
   }
 
   @Input('priorities')
@@ -66,19 +81,24 @@ export class TasksComponent implements OnInit {
     /*to fill a table with data*/
   }
 
-  getPriorityColor(task: Task): string {
-    let color = '#fff';
-    if (task.completed) {
-      color = '#F8F9FA';
-    } else if (task.priority && task.priority.color) {
-      color = task.priority.color;
+  assignTableSource(): void {
+    if (!this.dataSource) {
+      return;
     }
-    return color;
+    this.dataSource.data = this.tasks;
+
   }
 
-  onToggleStatus(task: Task): void {
-    task.completed = !task.completed;
-    this.updateTask.emit(task);
+  getPriorityColor(task: Task): string {
+    // task completed return color default
+    if (task.completed) {
+      return this.colorCompletedTask;
+    }
+    // if is color priority than return
+    if (task.priority && task.priority.color) {
+      return task.priority.color;
+    }
+    return this.colorWhite;
   }
 
   onSelectCategory(category: Category | undefined): void {
@@ -103,7 +123,7 @@ export class TasksComponent implements OnInit {
     }
   }
 
-  openEditTaskDialog(task: Task): void {
+  openEditDialog(task: Task): void {
     const dialogRef = this.dialog.open(EditTaskDialogComponent,
       {data: [task, 'Редактирование задачи', OperType.EDIT], autoFocus: false});
     dialogRef.afterClosed().subscribe(result => {
@@ -140,7 +160,7 @@ export class TasksComponent implements OnInit {
     });
   }
 
-  openAddTaskDialog(): void {
+  openAddDialog(): void {
     const task: Task = {
       id: 0,
       title: '',
@@ -158,6 +178,10 @@ export class TasksComponent implements OnInit {
     });
   }
 
+  pageChanged(pageEvent: PageEvent): void {
+    this.paging.emit(pageEvent);
+  }
+
   // в зависимости от статуса задачи - вернуть фоновый цвет
   getMobilePriorityBgColor(task: Task): string {
     if (task.priority != null && !task.completed) {
@@ -166,31 +190,15 @@ export class TasksComponent implements OnInit {
     return 'none';
   }
 
-  private fillTable(): void {
-    if (!this.dataSource) {
-      return;
+  getPriorityBgColor(task: Task): string {
+    if (task.priority != null && !task.completed) {
+      return task.priority.color;
     }
-    this.dataSource.data = this.tasks;
-    this.addTableObjects();
-    // @ts-ignore
-    this.dataSource.sortingDataAccessor = (task, colName) => {
-      // по каким полям выполнять сортировку для каждого столбца
-      switch (colName) {
-        case 'priority': {
-          return task.priority ? task.priority.id : null;
-        }
-        case 'category': {
-          return task.category ? task.category.title : null;
-        }
-        case 'date': {
-          return task.date ? task.date : null;
-        }
+    return 'none';
+  }
 
-        case 'title': {
-          return task.title;
-        }
-      }
-    };
+  onToggleCompleted(task: Task): void {
+
   }
 
   private addTableObjects(): void {
@@ -199,5 +207,4 @@ export class TasksComponent implements OnInit {
     /*update component paginator(count pages or notes)*/
     this.dataSource.paginator = this.paginator;
   }
-
 }

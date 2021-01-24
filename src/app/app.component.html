@@ -60,9 +60,11 @@
                  data-step="8"
             >
               <app-tasks
-
+                (paging)="paging($event)"
                 [selectedCategory]="selectedCategoryInApp"
+                [taskSearchValues]="taskSearchValues"
                 [tasks]="tasks"
+                [totalTasksFounded]="totalTasksFounded"
               >
               </app-tasks>
             </div>
