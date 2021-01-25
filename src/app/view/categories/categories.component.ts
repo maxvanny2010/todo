@@ -44,7 +44,7 @@ export class CategoriesComponent {
 
   @Input('categories')
   set setCategories(categories: Category[]) {
-    this.categories = categories; // категории для отображения
+    this.categories = categories;
   }
 
   @Input('categorySearchValues')
@@ -52,18 +52,9 @@ export class CategoriesComponent {
     this.categorySearchValues = categorySearchValues;
   }
 
-  // используется для категории Все
   @Input('uncompletedCountForCategoryAll')
   set uncompletedCount(uncompletedCountForCategoryAll: number) {
     this.uncompletedCountForCategoryAll = uncompletedCountForCategoryAll;
-  }
-
-  showTaskBy(category: Category): void {
-    if (this.selectedCategory === category) {
-      return;
-    }
-    this.selectedCategory = category;
-    this.selectCategory.emit(this.selectedCategory);
   }
 
   openEditDialog(category: Category): void {

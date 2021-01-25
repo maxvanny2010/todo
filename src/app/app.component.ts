@@ -133,11 +133,10 @@ export class AppComponent implements OnInit {
 
   /*Category action*/
   selectCategory(category: Category | undefined): void {
-    this.taskSearchValues.pageNumber = 0; // сбрасываем, чтобы показывать результат с первой страницы
-    this.selectedCategoryInApp = category; // запоминаем выбранную категорию
-    this.taskSearchValues.categoryId = category ? category.id : null; // для поиска задач по данной категории
-    // обновить список задач согласно выбранной категории и другим параметрам поиска из taskSearchValues
-    this.searchTasks(this.taskSearchValues);
+    this.taskSearchValues.pageNumber = 0; /*reset for to show from 0 page*/
+    this.selectedCategoryInApp = category; /* remember select category */
+    this.taskSearchValues.categoryId = category ? category.id : null; /* for search task by category*/
+    this.searchTasks(this.taskSearchValues); /*update list of task by category and parameters from taskSearchValues*/
     if (this.isMobile) {
       this.menuOpened = false;
     }
@@ -145,15 +144,15 @@ export class AppComponent implements OnInit {
 
   updateCategory(category: Category): void {
     this.categoryService.update(category).subscribe(() => {
-      this.searchCategory(this.categorySearchValues); // обновляем список категорий
-      this.searchTasks(this.taskSearchValues); // обновляем список задач
+      this.searchCategory(this.categorySearchValues); /*update list of category*/
+      this.searchTasks(this.taskSearchValues); /*update list of task*/
     });
   }
 
   deleteCategory(category: Category): void {
     if (category.id != null) {
       this.categoryService.delete(category.id).subscribe(cat => {
-        this.selectedCategoryInApp = undefined; // выбираем категорию "Все"
+        this.selectedCategoryInApp = undefined; /* select category ALL*/
         this.searchCategory(this.categorySearchValues);
         this.selectCategory(this.selectedCategoryInApp);
       });

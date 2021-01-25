@@ -30,9 +30,9 @@ export class TasksComponent implements OnInit {
   @Output() deleteTask: EventEmitter<Task> = new EventEmitter<Task>();
   @Output() updateTask: EventEmitter<Task> = new EventEmitter<Task>();
   @Output() selectCategory: EventEmitter<Category> = new EventEmitter<Category>();
-  @Output() paging: EventEmitter<PageEvent> = new EventEmitter<PageEvent>(); // переход по страницам данных
+  @Output() paging: EventEmitter<PageEvent> = new EventEmitter<PageEvent>(); /*shift between pages*/
   @Output() searchAction = new EventEmitter<TaskSearchValues>();
-  @Output() toggleSearch = new EventEmitter<boolean>(); // показать/скрыть поиск
+  @Output() toggleSearch = new EventEmitter<boolean>(); /*show|hide search*/
   @Output() filterByTitle: EventEmitter<string> = new EventEmitter<string>();
   @Output() filterByStatus: EventEmitter<any> = new EventEmitter<any>();
   @Output() filterByPriority: EventEmitter<Priority> = new EventEmitter<Priority>();
@@ -43,15 +43,14 @@ export class TasksComponent implements OnInit {
   filterPriorityId!: number | null;
   filterSortColumn!: string;
   filterSortDirection!: string;
-  sortIconName!: string; // иконка сортировки (убывание, возрастание)
-  // названия иконок из коллекции
+  sortIconName!: string; /*icon for sort asc|desc*/
   readonly iconNameDown = 'arrow_downward';
   readonly iconNameUp = 'arrow_upward';
   readonly colorCompletedTask = '#F8F9FA';
   readonly colorWhite = '#fff';
   readonly defaultSortColumn = 'title';
   readonly defaultSortDirection = 'asc';
-  @Input() totalTasksFounded!: number; // сколько всего задач найдено
+  @Input() totalTasksFounded!: number; /*how many task found*/
   @Input() selectedCategory: Category | undefined;
   @Input() showSearch!: boolean;
   isMobile!: boolean;
@@ -68,15 +67,13 @@ export class TasksComponent implements OnInit {
     this.isTablet = this.deviceService.isTablet();
   }
 
-  // задачи для отображения на странице
-  @Input('tasks')
+  @Input('tasks') /* task for to show in page*/
   set setTasks(tasks: Task[]) {
     this.tasks = tasks;
-    this.assignTableSource();   // передать данные таблице для отображения задач
+    this.assignTableSource();  /*data for datasource*/
   }
 
-  // все возможные параметры для поиска задач
-  @Input('taskSearchValues')
+  @Input('taskSearchValues') /*parameters for search*/
   set setTaskSearchValues(taskSearchValues: TaskSearchValues) {
     this.taskSearchValues = taskSearchValues;
     this.initSearchValues();
@@ -115,7 +112,7 @@ export class TasksComponent implements OnInit {
   }
 
   initSearch(): void {
-    // сохраняем значения перед поиском
+    // to save before search
     this.taskSearchValues.title = this.filterTitle;
     this.taskSearchValues.completed = this.filterCompleted;
     this.taskSearchValues.priorityId = this.filterPriorityId;
@@ -123,12 +120,12 @@ export class TasksComponent implements OnInit {
     this.taskSearchValues.sortDirection = this.filterSortDirection;
 
     this.searchAction.emit(this.taskSearchValues);
-    this.changed = false; // сбрасываем флаг изменения
+    this.changed = false; // reset flag changed for input
   }
 
   checkFilterChanged(): boolean {
     this.changed = false;
-    // поочередно проверяем все фильтры (текущее введенное значение с последним сохраненным)
+    // check all filter
     if (this.taskSearchValues.title !== this.filterTitle) {
       this.changed = true;
     }
@@ -151,8 +148,7 @@ export class TasksComponent implements OnInit {
     return this.changed;
   }
 
-// выбрать правильную иконку (убывание, возрастание)
-  initSortDirectionIcon(): void {
+  initSortDirectionIcon(): void {  /*choose icon*/
     if (this.filterSortDirection === 'desc') {
       this.sortIconName = this.iconNameDown;
     } else {
@@ -160,14 +156,13 @@ export class TasksComponent implements OnInit {
     }
   }
 
-// изменили направление сортировки
-  changedSortDirection(): void {
+  changedSortDirection(): void {  /*change direction of sort*/
     if (this.filterSortDirection === 'asc') {
       this.filterSortDirection = 'desc';
     } else {
       this.filterSortDirection = 'asc';
     }
-    this.initSortDirectionIcon(); // применяем правильную иконку
+    this.initSortDirectionIcon(); /*set icon*/
   }
 
 // проинициализировать локальные переменные поиска
@@ -182,8 +177,7 @@ export class TasksComponent implements OnInit {
     this.filterSortDirection = this.taskSearchValues.sortDirection;
   }
 
-  // сбросить локальные переменные поиска
-  clearSearchValues(): void {
+  clearSearchValues(): void {/*reset local variable for search*/
     this.filterTitle = '';
     this.filterCompleted = null;
     this.filterPriorityId = null;
@@ -191,8 +185,7 @@ export class TasksComponent implements OnInit {
     this.filterSortDirection = this.defaultSortDirection;
   }
 
-  // показать/скрыть инструменты поиска
-  onToggleSearch(): void {
+  onToggleSearch(): void {/*show|hide block search*/
     this.toggleSearch.emit(!this.showSearch);
   }
 
@@ -244,8 +237,7 @@ export class TasksComponent implements OnInit {
     this.paging.emit(pageEvent);
   }
 
-  // в зависимости от статуса задачи - вернуть фоновый цвет
-  getMobilePriorityBgColor(task: Task): string {
+  getMobilePriorityBgColor(task: Task): string {/*return background color of priority*/
     if (task.priority != null && !task.completed) {
       return task.priority.color;
     }
