@@ -9,14 +9,16 @@
   <div class="col-md-2 col-sm-12">
     <!--    поиск задач-->
     <mat-form-field>
-      <input (keydown.escape)="$event.stopPropagation(); filterTitle=''; checkFilterChanged()" (ngModelChange)="this.checkFilterChanged()"
+      <input (keydown.escape)="$event.stopPropagation(); filterTitle=''; checkFilterChanged()"
+             (ngModelChange)="this.checkFilterChanged()"
              [(ngModel)]='filterTitle'
              matInput
              placeholder="Название"
       >
-      <button (click)="$event.stopPropagation(); filterTitle=''; checkFilterChanged()" *ngIf="filterTitle && filterTitle.trim().length > 0" aria-label="Clear"
-              class="clear-icon" mat-button
-              mat-icon-button
+      <button (click)="$event.stopPropagation(); filterTitle=''; checkFilterChanged()"
+              *ngIf="filterTitle && filterTitle.trim().length > 0"
+              aria-label="Clear" class="clear-icon"
+              mat-button mat-icon-button
               matSuffix
       >
         <mat-icon>clear</mat-icon>
@@ -27,13 +29,15 @@
     <!--    фильтр по статусу -->
     <mat-form-field>
       <!--использем 1 или 0 как true/false-->
-      <mat-select (selectionChange)="checkFilterChanged()" [(ngModel)]="filterCompleted"
+      <mat-select (selectionChange)="checkFilterChanged()"
+                  [(ngModel)]="filterCompleted"
                   placeholder="Фильтр по статусу">
         <mat-option [value]="null">Все статусы</mat-option>
         <mat-option [value]="1">Завершенные задачи</mat-option>
         <mat-option [value]="0">Незавершенные задачи</mat-option>
       </mat-select>
-      <button (click)="$event.stopPropagation(); filterCompleted = null; checkFilterChanged()" *ngIf="filterCompleted != null" aria-label="Clear"
+      <button (click)="$event.stopPropagation(); filterCompleted = null; checkFilterChanged()"
+              *ngIf="filterCompleted != null" aria-label="Clear"
               class="clear-icon" mat-button
               mat-icon-button
               matSuffix
@@ -50,7 +54,8 @@
         <mat-option [value]="null">Все приоритеты</mat-option>
         <mat-option *ngFor="let priority of priorities" [value]="priority.id">{{priority.title}}</mat-option>
       </mat-select>
-      <button (click)="$event.stopPropagation(); filterPriorityId = null; checkFilterChanged() " *ngIf="filterPriorityId != null" aria-label="Clear"
+      <button (click)="$event.stopPropagation(); filterPriorityId = null; checkFilterChanged() "
+              *ngIf="filterPriorityId != null" aria-label="Clear"
               class="clear-icon" mat-button
               mat-icon-button
               matSuffix
@@ -75,7 +80,8 @@
   <div [ngClass]="{'sort': !isMobile}" class="col-md-4 col-sm-12"
   >
     <!--<span *ngIf="isMobile">Сортировка: </span>-->
-    <button (click)="$event.stopPropagation(); changedSortDirection(); checkFilterChanged()" aria-label="Sort direction" mat-button
+    <button (click)="$event.stopPropagation(); changedSortDirection(); checkFilterChanged()" aria-label="Sort direction"
+            mat-button
             mat-icon-button
             matSuffix
     >
@@ -86,7 +92,8 @@
             style="margin-left: 3px; background-color: #cbcbcb; color: #ffffff;">
       <mat-icon>search</mat-icon>
     </button>
-    <button (click)="$event.stopPropagation(); clearSearchValues(); checkFilterChanged()" aria-label="Clear" mat-button matSuffix
+    <button (click)="$event.stopPropagation(); clearSearchValues(); checkFilterChanged()" aria-label="Clear" mat-button
+            matSuffix
             style="margin-left: 3px;"
     >
       Очистить
