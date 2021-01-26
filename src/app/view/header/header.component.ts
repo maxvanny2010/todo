@@ -12,8 +12,8 @@ import {DeviceDetectorService} from 'ngx-device-detector';
 export class HeaderComponent {
   @Input() categoryName = '';
   @Input() showStat!: boolean;
-  @Output() toggleStat: EventEmitter<boolean> = new EventEmitter<boolean>(); // показать/скрыть статистику
-  @Output() toggleMenu: EventEmitter<any> = new EventEmitter<any>(); // показать/скрыть статистику
+  @Output() toggleStat: EventEmitter<boolean> = new EventEmitter<boolean>(); /*show|hide stat block*/
+  @Output() toggleMenu: EventEmitter<any> = new EventEmitter<any>();
   isMobile = false;
   isTablet = false;
 
@@ -27,7 +27,7 @@ export class HeaderComponent {
   }
 
   onToggleStat(): void {
-    this.toggleStat.emit(!this.showStat); // вкл/выкл статистику
+    this.toggleStat.emit(!this.showStat);
   }
 
 

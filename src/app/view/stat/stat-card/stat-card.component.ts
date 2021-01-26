@@ -14,10 +14,10 @@ export class StatCardComponent {
   iconName = '';
 
   @Input()
-  count: any; // можно передавать любой тип для отображения (число, текст и пр.)
+  count1: any;
 
   @Input()
-  countTotal: any;
+  count2: any;
 
   @Input()
   title = '';

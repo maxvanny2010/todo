@@ -1,6 +1,7 @@
 export class Stat {
-  constructor(public id: number,
-              public  completedTotal: number,
-              public  uncompletedTotal: number) {
+  constructor(public id?: number,
+              public title?: string,
+              public  completedTotal?: any,
+              public  uncompletedTotal?: any) {
   }
 }

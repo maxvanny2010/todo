@@ -23,12 +23,13 @@
     <div class="main-panel">
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top">
 
-        <!--<app-header
+        <app-header
           (toggleMenu)="toggleMenu()"
           (toggleStat)="toggleStat($event)"
-          [categoryName]="selectedCategoryInApp? selectedCategoryInApp.title: 'Все категории'"
+
+          [categoryName]="selectedCategoryInApp ? selectedCategoryInApp.title: 'Все Категории'"
           [showStat]="showStat"
-        ></app-header>-->
+        ></app-header>
 
       </nav>
       <div class="content">
@@ -40,12 +41,11 @@
                  data-scrollTo="tooltip"
                  data-step="7"
             >
-              <!--   <app-stat
-                   [completeTasksInCategory]="completedCountInCategory"
-                   [showStat]="showStat"
-                   [totalTasksInCategory]="totalTasksCountInCategory"
-                   [uncompletedTasksInCategory]="uncompletedCountInCategory"
-                 ></app-stat>-->
+              <app-stat
+                [dash]="dash"
+                [showStat]="showStat"
+              >
+              </app-stat>
             </div>
           </div>
           <div class="row">

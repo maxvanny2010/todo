@@ -283,11 +283,4 @@ export class TasksComponent implements OnInit {
     task.completed = task.completed === 0 ? 1 : 0;
     this.updateTask.emit(task);
   }
-
-  private addTableObjects(): void {
-    /*component for sort data*/
-    this.dataSource.sort = this.sort;
-    /*update component paginator(count pages or notes)*/
-    this.dataSource.paginator = this.paginator;
-  }
 }

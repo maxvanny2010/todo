@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Observable, zip} from 'rxjs';
+import {Observable} from 'rxjs';
 import {IntroService} from './services/intro.service';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDrawerMode} from '@angular/material/sidenav/drawer';
@@ -13,6 +13,9 @@ import {TaskService} from './data/dao/impl/task.service';
 import {MatDialog} from '@angular/material/dialog';
 import {PageEvent} from '@angular/material/paginator';
 import {PriorityService} from './data/dao/impl/priority.service';
+import {DashboardData} from './action/DashboardData';
+import {StatService} from './data/dao/impl/stat.service';
+import {Stat} from './model/Stat';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +28,6 @@ export class AppComponent implements OnInit {
   tasks: Task[] = [];
   selectedCategoryInApp!: Category | undefined;
   uncompletedCountForCategoryAll!: any;
-  showStat = true;
   menuOpened = true;
   menuPosition!: DatepickerDropdownPositionX;
   backDrop = false;
@@ -37,17 +39,30 @@ export class AppComponent implements OnInit {
   totalTasksFounded!: number;
   readonly defaultPageSize = 5;
   readonly defaultPageNumber = 0;
-  showSearch!: boolean;
+  showStat = true;
+  showSearch = true;
+  stat: Stat = new Stat();
+  dash: DashboardData = new DashboardData(0, 0);
 
 
   constructor(
     private categoryService: CategoryService,
     private priorityService: PriorityService,
     private taskService: TaskService,
+    private statService: StatService,
     private introService: IntroService,
     private deviceService: DeviceDetectorService,
-    private dialog: MatDialog,
+    private dialog: MatDialog
   ) {
+    this.statService.getOverallStat().subscribe(result => {
+      this.stat = result;
+      this.uncompletedCountForCategoryAll = this.stat.uncompletedTotal;
+      this.fillAllCategories().subscribe(res => {
+        this.categories = res;
+        this.selectCategory(this.selectedCategoryInApp); /*first to get stat*/
+
+      });
+    });
     this.isMobile = this.deviceService.isMobile();
     this.isTablet = this.deviceService.isTablet();
     this.showStat = !this.isMobile;
@@ -78,27 +93,14 @@ export class AppComponent implements OnInit {
     }
   }
 
+  fillDashData(completedCount: any, uncompletedCount: any): void {
+    this.dash.completedTotal = completedCount;
+    this.dash.uncompletedTotal = uncompletedCount;
+  }
+
   fillAllPriorities(): void {
     this.priorityService.findAll().subscribe(result => {
       this.priorities = result;
-    });
-  }
-
-  updateTask(task: Task): void {
-    this.taskService.update(task).subscribe(() => {
-      this.searchTasks(this.taskSearchValues);
-    });
-  }
-
-  deleteTask(task: Task): void {
-    this.taskService.delete(task.id).subscribe(() => {
-      this.searchTasks(this.taskSearchValues);
-    });
-  }
-
-  addTask(task: Task): void {
-    this.taskService.add(task).subscribe(() => {
-      this.searchTasks(this.taskSearchValues);
     });
   }
 
@@ -106,8 +108,65 @@ export class AppComponent implements OnInit {
     return this.categoryService.findAll();
   }
 
+  addTask(task: Task): void {
+    this.taskService.add(task).subscribe(() => {
+      if (task.category) {
+        this.updateCategoryCounter(task.category);
+      }
+      this.updateOverallCounter();
+      this.searchTasks(this.taskSearchValues);
+    });
+  }
+
+  /*Task action*/
+  updateTask(task: Task): void {
+    this.taskService.update(task).subscribe(() => {
+      if (task.oldCategory) { /*if task to have old category*/
+        this.updateCategoryCounter(task.oldCategory); /*update this old category*/
+      }
+      if (task.category) {
+        this.updateCategoryCounter(task.category);
+      }
+      this.updateOverallCounter();
+      this.searchTasks(this.taskSearchValues);
+    });
+
+  }
+
+  deleteTask(task: Task): void {
+    this.taskService.delete(task.id).subscribe(() => {
+      this.taskService.delete(task.id).subscribe(() => {
+        if (task.category) { /*if task to have category*/
+          this.updateCategoryCounter(task.category); /*update category counter*/
+        }
+        this.updateOverallCounter(); /*update stat for all*/
+        this.searchTasks(this.taskSearchValues); /*update task list*/
+      });
+    });
+  }
+
+  searchTasks(searchTaskValues: TaskSearchValues): void {
+    this.taskSearchValues = searchTaskValues;
+    this.taskService.findTasks(this.taskSearchValues).subscribe(result => {
+      // Если выбранная страница для отображения больше, чем всего страниц - заново поиск и показать 1ю страницу.
+      // Если пользователь был на 2й странице списка и выполнил новый поиск и доступна только 1 страница,
+      // то поиск заново и показать с 1й страницы (индекс 0)
+      if (result.totalPages > 0 && this.taskSearchValues.pageNumber >= result.totalPages) {
+        this.taskSearchValues.pageNumber = 0;
+        this.searchTasks(this.taskSearchValues);
+      }
+      this.totalTasksFounded = result.totalElements;
+      this.tasks = result.content;
+    });
+  }
+
   /*Category action*/
   selectCategory(category: Category | undefined): void {
+    if (category) {
+      this.fillDashData(category.completedCount, category.uncompletedCount);
+    } else {
+      this.fillDashData(this.stat.completedTotal, this.stat.uncompletedTotal); /*for category ALL*/
+    }
     this.taskSearchValues.pageNumber = 0; /*reset for to show from 0 page*/
     this.selectedCategoryInApp = category; /* remember select category */
     this.taskSearchValues.categoryId = category ? category.id : null; /* for search task by category*/
@@ -126,16 +185,14 @@ export class AppComponent implements OnInit {
 
   deleteCategory(category: Category): void {
     if (category.id != null) {
-      this.categoryService.delete(category.id).subscribe(cat => {
-        this.selectedCategoryInApp = undefined; /* select category ALL*/
-        this.searchCategory(this.categorySearchValues);
-        this.selectCategory(this.selectedCategoryInApp);
-      });
+      this.selectedCategoryInApp = undefined; /*choose category ALL*/
+      this.searchCategory(this.categorySearchValues);
+      this.selectCategory(this.selectedCategoryInApp);
     }
   }
 
   addCategory(category: Category): void {
-    this.categoryService.add(category).subscribe(result => {
+    this.categoryService.add(category).subscribe(() => {
         this.searchCategory(this.categorySearchValues);
       }
     );
@@ -147,6 +204,65 @@ export class AppComponent implements OnInit {
     });
   }
 
+  /*update and show stat if choose this category*/
+  updateCategoryCounter(category: Category): void {
+    if (category.id !== null) {
+      this.categoryService.findById(category.id).subscribe(cat => {
+        this.categories[this.getCategoryIndex(category)] = cat; /*change in local array*/
+        this.showCategoryDashboard(cat);  /*show stat category*/
+      });
+    }
+  }
+
+  updateOverallCounter(): void {
+    this.statService.getOverallStat().subscribe(res => {
+      this.stat = res; /*get actual data from bd*/
+      this.uncompletedCountForCategoryAll = this.stat.uncompletedTotal; /*for counter category ALL*/
+      if (!this.selectedCategoryInApp) { // if choose ALL (selectedCategory === null)
+        this.fillDashData(this.stat.completedTotal, this.stat.uncompletedTotal); /*fill dash*/
+      }
+    });
+  }
+
+  showCategoryDashboard(category: Category): void {
+    if (this.selectedCategoryInApp && this.selectedCategoryInApp.id === category.id) { /*if choose category where we are now*/
+      if (category.completedCount !== undefined && category.uncompletedCount !== undefined) {
+        this.fillDashData(category.completedCount, category.uncompletedCount);
+      }
+    }
+  }
+
+  paging(pageEvent: PageEvent): void {
+    if (this.taskSearchValues.pageSize !== pageEvent.pageSize) { /* if size task in page is change to show from 1 page( 0 index)*/
+      this.taskSearchValues.pageNumber = 0;
+    } else {
+      this.taskSearchValues.pageNumber = pageEvent.pageIndex; /*if shift ot another page*/
+    }
+    this.taskSearchValues.pageSize = pageEvent.pageSize;
+    this.taskSearchValues.pageNumber = pageEvent.pageIndex;
+    this.searchTasks(this.taskSearchValues);
+  }
+
+  getCategoryFromArray(id: number): Category | undefined {
+    return this.categories.find(t => t.id === id);
+  }
+
+  getCategoryIndex(category: Category): number {
+    const tmpCategory = this.categories.find(t => t.id === category.id);
+    if (tmpCategory) {
+      return this.categories.indexOf(tmpCategory);
+    }
+    return -1;
+  }
+
+  getCategoryIndexById(id: number): number {
+    const tmpCategory = this.categories.find(t => t.id === id);
+    if (tmpCategory) {
+      return this.categories.indexOf(tmpCategory);
+    }
+    return -1;
+  }
+
   toggleStat(showStat: boolean): void {
     this.showStat = showStat;
   }
@@ -155,55 +271,11 @@ export class AppComponent implements OnInit {
     this.menuOpened = !this.menuOpened;
   }
 
-  onClosedMenu(): void {
-    this.menuOpened = false;
-  }
-
-  paging(pageEvent: PageEvent): void {
-    // если изменили настройку "кол-во на странице" - заново делаем запрос и показываем с 1й страницы
-    if (this.taskSearchValues.pageSize !== pageEvent.pageSize) {
-      this.taskSearchValues.pageNumber = 0; // новые данные будем показывать с 1-й страницы (индекс 0)
-    } else {
-      // если просто перешли на другую страницу
-      this.taskSearchValues.pageNumber = pageEvent.pageIndex;
-    }
-    this.taskSearchValues.pageSize = pageEvent.pageSize;
-    this.taskSearchValues.pageNumber = pageEvent.pageIndex;
-    this.searchTasks(this.taskSearchValues); // показываем новые данные
-  }
-
-  searchTasks(searchTaskValues: TaskSearchValues): void {
-    this.taskSearchValues = searchTaskValues;
-    this.taskService.findTasks(this.taskSearchValues).subscribe(result => {
-      // Если выбранная страница для отображения больше, чем всего страниц - заново делаем поиск и показываем 1ю страницу.
-      // Если пользователь был например на 2й странице общего списка и выполнил новый поиск,
-      // в результате которого доступна только 1 страница,
-      // то нужно вызвать поиск заново с показом 1й страницы (индекс 0)
-      if (result.totalPages > 0 && this.taskSearchValues.pageNumber >= result.totalPages) {
-        this.taskSearchValues.pageNumber = 0;
-        this.searchTasks(this.taskSearchValues);
-      }
-      this.totalTasksFounded = result.totalElements;
-      this.tasks = result.content;
-    });
-  }
-
   toggleSearch(showSearch: boolean): void {
     this.showSearch = showSearch;
   }
 
-  private updateStat(): void {
-    zip(
-      /* this.dataHandler.getTotalCountInCategory(this.selectedCategoryInApp),
-       this.dataHandler.getCompletedCountInCategory(this.selectedCategoryInApp),
-       this.dataHandler.getUnCompletedCountInCategory(this.selectedCategoryInApp),
-       this.dataHandler.getUnCompletedTotalCount(),*/
-    ).subscribe(array => {
-      /*this.totalTasksCountInCategory = array[0];
-      this.completedCountInCategory = array[1];
-      this.uncompletedCountInCategory = array[2];
-      this.uncompletedCountForCategoryAll = array[3];*/
-    });
+  onClosedMenu(): void {
+    this.menuOpened = false;
   }
-
 }
