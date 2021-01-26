@@ -66,13 +66,12 @@
                 (searchAction)="searchTasks($event)"
                 (selectCategory)="selectCategory($event)"
                 (toggleSearch)="toggleSearch($event)"
-
-
                 (updateTask)="updateTask($event)"
+
+                [categories]="categories"
                 [priorities]="priorities"
                 [selectedCategory]="selectedCategoryInApp"
                 [showSearch]="showSearch"
-
                 [taskSearchValues]="taskSearchValues"
                 [tasks]="tasks"
                 [totalTasksFounded]="totalTasksFounded"
@@ -83,7 +82,7 @@
           </div>
         </div>
       </div>
-      <app-footer></app-footer>
+      <app-footer *ngIf="!isMobile"></app-footer>
     </div>
   </mat-drawer-content>
 </mat-drawer-container>
@@ -108,14 +107,4 @@
                 </p>
               </a>
             </li>
--->
-<!--
- (addTask)="onAddTask($event)"
-                   (deleteTask)="onDeleteTask($event)"
-                   (filterByPriority)="onFilterTasksByPriority($event)"
-                   (filterByStatus)="onFilterTasksByStatus($event)"
-                   (filterByTitle)="onSearchTasks($event)"
-                   (updateTask)="onUpdateTask($event)"
-                   [priorities]="priorities"
-                   [selectedCategory]="selectedCategoryInApp"
 -->

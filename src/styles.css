@@ -113,3 +113,29 @@ app-header {
   -o-animation: glowing 700ms infinite;
   animation: glowing 700ms infinite;
 }
+
+.ready-date {
+  border-bottom: 1px dashed #3879d6;
+  color: #3879d6;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.gap10 {
+  height: 10px !important;
+}
+
+.gap20 {
+  height: 20px !important;
+}
+
+.show-hide-search {
+  margin-top: 20px !important;
+}
+
+.founded-center {
+  text-align: center;
+  margin-top: 10px;
+}
+

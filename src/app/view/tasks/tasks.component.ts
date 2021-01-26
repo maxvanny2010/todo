@@ -6,12 +6,12 @@ import {EditTaskDialogComponent} from '../../dialog/edit-task-dialog/edit-task-d
 import {MatDialog} from '@angular/material/dialog';
 
 import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog.component';
-import {OperType} from '../../dialog/OperType';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {Priority} from '../../model/Priority';
 import {Task} from 'src/app/model/Task';
 import {Category} from '../../model/Category';
 import {TaskSearchValues} from '../../data/dao/search/SearchObjects';
+import {DialogAction} from '../../action/DialogResult';
 
 @Component({
   selector: 'app-tasks',
@@ -22,6 +22,7 @@ export class TasksComponent implements OnInit {
   // to set values only in html in base page in <app-tasks [tasks]="tasks">
   tasks: Task[] = [];
   priorities: Priority[] = [];
+  categories: Category[] = [];
   taskSearchValues!: TaskSearchValues;
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category', 'operations', 'select'];
   /*container for table data from tasks[] ps. it can be db or any data source*/
@@ -83,6 +84,11 @@ export class TasksComponent implements OnInit {
   @Input('priorities')
   set setPriorities(priorities: Priority[]) {
     this.priorities = priorities;
+  }
+
+  @Input('categories')
+  set setCategories(categories: Category[]) {
+    this.categories = categories;
   }
 
   ngOnInit(): void {
@@ -193,42 +199,64 @@ export class TasksComponent implements OnInit {
     this.selectCategory.emit(category);
   }
 
-  openEditDialog(task: Task): void {
-    const dialogRef = this.dialog.open(EditTaskDialogComponent,
-      {data: [task, 'Редактирование задачи', OperType.EDIT], autoFocus: false});
+  openAddDialog(): void {
+    const task = new Task(0, '', 0, undefined, this.selectedCategory);
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {
+      /*empty task*/
+      data: [task, 'Добавление задачи', this.categories, this.priorities]
+    });
     dialogRef.afterClosed().subscribe(result => {
+      if (!(result)) {
+        return;
+      }
+      if (result.action === DialogAction.SAVE) {
+        this.addTask.emit(task);
+      }
+    });
+
+  }
+
+  openEditDialog(task: Task): void {
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {
+      data: [task, 'Редактирование задачи', this.categories, this.priorities],
+      autoFocus: false
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (!(result)) {
+        return;
+      }
+      if (result.action === DialogAction.DELETE) {
+        this.deleteTask.emit(task);
+        return;
+      }
+      if (result.action === DialogAction.COMPLETE) {
+        task.completed = 1;
+        this.updateTask.emit(task);
+      }
+      if (result.action === DialogAction.ACTIVATE) {
+        task.completed = 0;
+        this.updateTask.emit(task);
+        return;
+      }
+      if (result.action === DialogAction.SAVE) {
+        this.updateTask.emit(task);
+        return;
+      }
     });
   }
 
   openDeleteDialog(task: Task): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: '500px',
-      data: {
-        dialogTitle: 'Подтвердите действие',
-        message: `Вы действительно хотите удалить задачу: ${task.title}?`
-      }, autoFocus: false
+      data: {dialogTitle: 'Подтвердите действие', message: `Вы действительно хотите удалить задачу: "${task.title}"?`},
+      autoFocus: false
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.deleteTask.emit(task);
+      if (!(result)) {
+        return;
       }
-    });
-  }
-
-  openAddDialog(): void {
-    const task: Task = {
-      id: 0,
-      title: '',
-      completed: 0,
-      priority: undefined,
-      category: this.selectedCategory
-    };
-    const dialogRef = this.dialog.open(EditTaskDialogComponent, {
-      data: [task, 'Добавление задачи', OperType.ADD]
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.addTask.emit(task);
+      if (result.action === DialogAction.OK) {
+        this.deleteTask.emit(task);
       }
     });
   }
@@ -252,7 +280,8 @@ export class TasksComponent implements OnInit {
   }
 
   onToggleCompleted(task: Task): void {
-    task.completed = task.completed === 0 ? 0 : 1;
+    task.completed = task.completed === 0 ? 1 : 0;
+    this.updateTask.emit(task);
   }
 
   private addTableObjects(): void {

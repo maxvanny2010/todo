@@ -8,6 +8,7 @@ export class Task {
     public completed: number,
     public priority?: Priority,
     public category?: Category,
-    public  date?: Date) {
+    public  date?: Date,
+    public oldCategory?: Category) {
   }
 }

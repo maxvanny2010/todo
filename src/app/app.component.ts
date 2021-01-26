@@ -55,13 +55,13 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (!this.isMobile && !this.isTablet) {
+      this.introService.startIntroJS(true);
+    }
     this.fillAllCategories().subscribe(result => {
       this.categories = result;
       this.selectCategory(this.selectedCategoryInApp);
     });
-    if (!this.isMobile && !this.isTablet) {
-      this.introService.startIntroJS(true);
-    }
     this.fillAllPriorities();
   }
 
@@ -85,46 +85,21 @@ export class AppComponent implements OnInit {
   }
 
   updateTask(task: Task): void {
-    /* this.dataHandler.updateTask(task).subscribe(() => {
-       this.fillCategories();
-       this.updateTasksAndStat();
-     });*/
+    this.taskService.update(task).subscribe(() => {
+      this.searchTasks(this.taskSearchValues);
+    });
   }
 
   deleteTask(task: Task): void {
-    /*this.dataHandler.deleteTask(task.id)
-      .pipe(
-        concatMap((tsk) => {
-            // @ts-ignore
-            return this.dataHandler.getUnCompletedCountInCategory(tsk.category)
-              .pipe(
-                map(count => {
-                  return ({t: tsk, count});
-                }));
-          }
-        )).subscribe(result => {
-      const t = result.t as Task;
-      this.categoryMap.set(t.category as Category, result.count);
-      this.updateTasksAndStat();
-    });*/
+    this.taskService.delete(task.id).subscribe(() => {
+      this.searchTasks(this.taskSearchValues);
+    });
   }
 
   addTask(task: Task): void {
-    /*this.dataHandler.addTask(task).pipe(
-      concatMap((tsk) => {
-          return this.dataHandler.getUnCompletedCountInCategory(tsk.category)
-            .pipe(
-              map(count => {
-                return ({t: tsk, count});
-              }));
-        }
-      )).subscribe(result => {
-      const t = result.t as Task;
-      if (t.category) {
-        this.categoryMap.set(t.category as Category, result.count);
-      }
-      this.updateTasksAndStat();
-    });*/
+    this.taskService.add(task).subscribe(() => {
+      this.searchTasks(this.taskSearchValues);
+    });
   }
 
   fillAllCategories(): Observable<Category[]> {
@@ -172,28 +147,16 @@ export class AppComponent implements OnInit {
     });
   }
 
-  onFilterTasksByStatus(status: boolean): void {
-    /* this.statusFilter = status;*/
-    this.updateTasks();
-  }
-
-  onFilterTasksByPriority(priority: Priority): void {
-    /* this.priorityFilter = priority;*/
-    this.updateTasks();
-
-  }
-
-  updateTasksAndStat(): void {
-    this.updateTasks();
-    this.updateStat();
-  }
-
   toggleStat(showStat: boolean): void {
     this.showStat = showStat;
   }
 
   toggleMenu(): void {
     this.menuOpened = !this.menuOpened;
+  }
+
+  onClosedMenu(): void {
+    this.menuOpened = false;
   }
 
   paging(pageEvent: PageEvent): void {
@@ -220,32 +183,13 @@ export class AppComponent implements OnInit {
         this.taskSearchValues.pageNumber = 0;
         this.searchTasks(this.taskSearchValues);
       }
-      this.totalTasksFounded = result.totalElements; // сколько данных показывать на странице
+      this.totalTasksFounded = result.totalElements;
       this.tasks = result.content;
     });
   }
 
   toggleSearch(showSearch: boolean): void {
     this.showSearch = showSearch;
-  }
-
-  private updateTasks(): void {
-    /*this.dataHandler.searchTasks(
-      this.selectedCategoryInApp as Category,
-      this.searchTaskText,
-      this.statusFilter,
-      this.priorityFilter
-    ).subscribe(tasks => {
-      this.tasks = tasks;
-    });*/
-  }
-
-  private updateCategories(): void {
-    /* this.dataHandler.getAllCategories()
-       .subscribe((categories) => {
-         this.categories = categories;
-         this.fillCategories();
-       });*/
   }
 
   private updateStat(): void {
