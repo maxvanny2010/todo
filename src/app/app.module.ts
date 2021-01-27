@@ -38,11 +38,12 @@ import {SidebarModule} from 'ng-sidebar';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {CATEGORY_URL_TOKEN} from './data/dao/impl/category.service';
 import {PRIORITY_URL_TOKEN} from './data/dao/impl/priority.service';
 import {TASK_URL_TOKEN} from './data/dao/impl/task.service';
 import {STAT_URL_TOKEN} from './data/dao/impl/stat.service';
+import {SpinnerInterceptor} from './interceptor/spinner.interceptor';
 
 registerLocaleData(localRu);
 
@@ -103,6 +104,11 @@ registerLocaleData(localRu);
     {
       provide: STAT_URL_TOKEN,
       useValue: 'http://localhost:8080/stat'
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: SpinnerInterceptor,
+      multi: true
     }
   ],
   bootstrap: [AppComponent]

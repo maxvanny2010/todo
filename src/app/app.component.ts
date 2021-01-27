@@ -16,6 +16,7 @@ import {PriorityService} from './data/dao/impl/priority.service';
 import {DashboardData} from './action/DashboardData';
 import {StatService} from './data/dao/impl/stat.service';
 import {Stat} from './model/Stat';
+import {SpinnerService} from './services/spinner.service';
 
 @Component({
   selector: 'app-root',
@@ -43,6 +44,7 @@ export class AppComponent implements OnInit {
   showSearch = true;
   stat: Stat = new Stat();
   dash: DashboardData = new DashboardData(0, 0);
+  spinner!: SpinnerService;
 
 
   constructor(
@@ -52,8 +54,10 @@ export class AppComponent implements OnInit {
     private statService: StatService,
     private introService: IntroService,
     private deviceService: DeviceDetectorService,
+    private spinnerService: SpinnerService,
     private dialog: MatDialog
   ) {
+    this.spinner = this.spinnerService;
     this.statService.getOverallStat().subscribe(result => {
       this.stat = result;
       this.uncompletedCountForCategoryAll = this.stat.uncompletedTotal;

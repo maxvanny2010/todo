@@ -159,11 +159,13 @@
 
 
 .check-icon-notcompleted {
+  margin-right: 30px  !important;
   font-size: 40px !important;
   color: #dadada;
 }
 
 .check-icon-completed {
+  margin-right: 30px  !important;
   font-size: 40px !important;
   color: rgba(167, 214, 182, 0.89);
 }

@@ -43,7 +43,8 @@
     >
     <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
-    <button (click)="newDate = undefined" *ngIf="inputDate.value.trim().length > 0" [disabled]="task.completed != null && task.completed !== 0" aria-label="Clear"
+    <button (click)="newDate = undefined" *ngIf="inputDate.value.trim().length > 0"
+            [disabled]="task.completed != null && task.completed !== 0" aria-label="Clear"
             class="calendar-clear-icon"
             mat-button
             mat-icon-button matSuffix>
@@ -77,41 +78,52 @@
   <div class="gap20"></div>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <div [ngClass]="{'text-center': isMobile, 'text-left': !isMobile}" class="col-md-5 col-12">
-    <button (click)="confirm()" [disabled]="inputTitle.value.trim().length==0" color="primary"
-            mat-raised-button
-            style="background: #43a047 !important;"
-    >
-      Сохранить
-    </button>
-    <button (click)="cancel()"
-            mat-raised-button
-    >Отмена
-    </button>
+  <div [class.d-flex]="isMobile || !isMobile"
+       class="col-md-6">
+    <div class="d-inline">
+      <button (click)="confirm()" [disabled]="inputTitle.value.trim().length==0" color="primary"
+              mat-raised-button
+              style="background: #43a047 !important;"
+      >
+        Сохранить
+      </button>
+    </div>
+    <div class="d-inline ml-2">
+      <button (click)="cancel()"
+              mat-raised-button
+      >Отмена
+      </button>
+    </div>
   </div>
-  <div *ngIf="canComplete || canDelete"
-       [ngClass]="{'text-center': isMobile, 'text-right': !isMobile}"
-       class="col-md-7 col-12 text-right"
-  >
-    <button
-      (click)="complete()" *ngIf="canComplete && task && !task.completed"
-      class="green"
-      mat-button
+  <div *ngIf="canComplete || canDelete">
+    <div class="col-md-6 d-flex"
     >
-      Завершить
-    </button>
-    <button (click)="activate()" *ngIf="canComplete && task && task.completed"
-            class="green"
-            mat-button
-    >
-      Активировать
-    </button>
-    <button (click)="delete()" *ngIf="canDelete"
-            class="red"
-            mat-button
-    >
-      Удалить
-    </button>
+      <div class="d-inline">
+        <button
+          (click)="complete()" *ngIf="canComplete && task && !task.completed"
+          class="green"
+          mat-button
+        >
+          Завершить
+        </button>
+      </div>
+      <div class="d-inline">
+        <button (click)="activate()" *ngIf="canComplete && task && task.completed"
+                class="green"
+                mat-button
+        >
+          Обновить
+        </button>
+      </div>
+      <div class="d-inline">
+        <button (click)="delete()" *ngIf="canDelete"
+                class="red"
+                mat-button
+        >
+          Удалить
+        </button>
+      </div>
+    </div>
   </div>
 </mat-dialog-actions>
 
