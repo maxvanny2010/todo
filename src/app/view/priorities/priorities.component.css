@@ -10,15 +10,6 @@
   float: left
 }
 
-.color-circle {
-  height: 25px;
-  width: 25px;
-  border-radius: 50%;
-  display: inline-block;
-  border: 1px solid #dadada;
-}
-
-
 .priorities p {
   margin: 0 !important;
 }
@@ -28,6 +19,3 @@
   color: rgba(99, 99, 99, 0.98);
   margin-top: 20px;
 }
-
-
-

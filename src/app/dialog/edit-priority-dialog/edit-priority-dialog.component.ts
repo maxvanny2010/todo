@@ -1,7 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {OperType} from '../OperType';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
+import {Priority} from '../../model/Priority';
+import {DialogAction, DialogResult} from '../../action/DialogResult';
 
 @Component({
   selector: 'app-edit-priority-dialog',
@@ -10,29 +11,30 @@ import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component
 })
 export class EditPriorityDialogComponent implements OnInit {
   dialogTitle = '';
-  priorityTitle = ''; // текст для названия приоритета (при реактировании или добавлении)
-  operType!: OperType;
+  priority!: Priority;
+  canDelete = false;
 
   constructor(
     private dialogRef: MatDialogRef<EditPriorityDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: [string, string, OperType],
+    @Inject(MAT_DIALOG_DATA) private data: [Priority, string],
     private dialog: MatDialog
   ) {
   }
 
   ngOnInit(): void {
-    this.priorityTitle = this.data[0];
+    this.priority = this.data[0];
     this.dialogTitle = this.data[1];
-    this.operType = this.data[2];
-
+    if (this.priority && this.priority.id > 0) {
+      this.canDelete = true;
+    }
   }
 
   onConfirm(): void {
-    this.dialogRef.close(this.priorityTitle);
+    this.dialogRef.close(new DialogResult(DialogAction.SAVE, this.priority));
   }
 
   onCancel(): void {
-    this.dialogRef.close(false);
+    this.dialogRef.close(new DialogResult(DialogAction.CANCEL));
   }
 
   delete(): void {
@@ -40,19 +42,19 @@ export class EditPriorityDialogComponent implements OnInit {
       maxWidth: '500px',
       data: {
         dialogTitle: 'Подтвердите действие',
-        message: `Вы действительно хотите удалить приоритет: "${this.priorityTitle}"? (в задачи проставится '')`
+        message: `Вы действительно хотите удалить приоритет: "${this.priority.title}"? (в задачи проставится '')`
       },
       autoFocus: false
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.dialogRef.close('delete');
+      if (!result) {
+        return;
+      }
+      if (result.action === DialogAction.OK) {
+        this.dialogRef.close(new DialogResult(DialogAction.DELETE)); // нажали удалить
       }
     });
   }
 
-  canDelete(): boolean {
-    return this.operType === OperType.EDIT;
-  }
 }

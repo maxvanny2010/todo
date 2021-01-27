@@ -278,4 +278,9 @@ export class AppComponent implements OnInit {
   onClosedMenu(): void {
     this.menuOpened = false;
   }
+
+  settingsChanged(): void {
+    this.fillAllPriorities();
+    this.searchTasks(this.taskSearchValues);
+  }
 }

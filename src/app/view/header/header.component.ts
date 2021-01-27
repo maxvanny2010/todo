@@ -3,6 +3,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {SettingsDialogComponent} from '../../dialog/settings-dialog/settings-dialog.component';
 import {IntroService} from '../../services/intro.service';
 import {DeviceDetectorService} from 'ngx-device-detector';
+import {DialogAction} from '../../action/DialogResult';
 
 @Component({
   selector: 'app-header',
@@ -14,6 +15,7 @@ export class HeaderComponent {
   @Input() showStat!: boolean;
   @Output() toggleStat: EventEmitter<boolean> = new EventEmitter<boolean>(); /*show|hide stat block*/
   @Output() toggleMenu: EventEmitter<any> = new EventEmitter<any>();
+  @Output() settingsChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
   isMobile = false;
   isTablet = false;
 
@@ -32,11 +34,18 @@ export class HeaderComponent {
 
 
   showSettings(): void {
-    this.dialog.open(SettingsDialogComponent,
+    const dialogRef = this.dialog.open(SettingsDialogComponent,
       {
         autoFocus: false,
         width: '500px'
       });
+    dialogRef.afterClosed().subscribe(result => {
+        if (result && result.acton === DialogAction.SETTING_CHANGE) {
+          this.settingsChanged.emit(true);
+          return;
+        }
+      }
+    );
   }
 
   showIntroHelp(): void {

@@ -1,15 +1,15 @@
 <div class="container-fluid">
   <div class="row settings">
     <div class="col-10 text-left align-self-top">
-      <button (click)="onToggleMenu()"
-              mat-icon-button
+      <button (click)="onToggleMenu()" mat-icon-button
               type="button"
       >
         <mat-icon data-intro="<strong>Меню</strong><br/>"
                   data-position="bottom"
                   data-scrollTo="tooltip"
                   data-step="2"
-        >menu
+        >
+          menu
         </mat-icon>
       </button>
 
@@ -59,7 +59,8 @@
           >settings
           </mat-icon>
         </button>
-        <button (click)="showIntroHelp()" *ngIf="!isMobile" class="header-icon"
+        <button (click)="showIntroHelp()" *ngIf="!isMobile"
+                class="header-icon"
                 mat-icon-button
         >
           <mat-icon>help</mat-icon>
