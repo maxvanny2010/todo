@@ -1,4 +1,4 @@
-<div class="spinner" *ngIf="spinner && spinner.visibility | async"></div>
+<div *ngIf="spinner && spinner.visibility | async" class="spinner"></div>
 <mat-drawer-container [hasBackdrop]="backDrop">
   <mat-drawer [mode]="menuMode" [ngClass]="menuOpened && !isMobile? 'menu-desktop':'menu-mobile'"
               [opened]="menuOpened"
